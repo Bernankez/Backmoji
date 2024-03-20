@@ -32,7 +32,9 @@
   },
   "devDependencies": {
     "@bernankez/eslint-config": "^0.7.4",
+    "@bernankez/utils": "^0.6.0",
     "@types/node": "^20.11.30",
+    "backmoji": "workspace:*",
     "bumpp": "^9.4.0",
     "eslint": "^8.57.0",
     "happy-dom": "^14.0.0",
