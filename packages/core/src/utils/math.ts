@@ -18,7 +18,7 @@ export function measureRectangle(width: number, height: number, degree: number) 
   w = w1 + w2;
   h = h1 + h2;
   if (degree < 90) {
-    // Exchange w and h
+    // Swap w and h
     const t = w;
     w = h;
     h = t;

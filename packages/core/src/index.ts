@@ -1,6 +1,6 @@
 import { makeDestructurable } from "@bernankez/utils";
 import { assert } from "./utils";
-import { degreeToAngle } from "./utils/math";
+import { degreeToAngle, measureRectangle } from "./utils/math";
 
 export interface BackmojiOptions {
   width?: number;
@@ -31,25 +31,6 @@ export function backmoji(options?: BackmojiOptions) {
 
   function getAngle(deg?: number) {
     return degreeToAngle(deg ?? degree);
-  }
-
-  function _getRows(rowHeight: number) {
-    const [width, height] = getSize();
-    const hypotenuse = Math.sqrt(width ** 2 + height ** 2);
-    const rowsHeight = hypotenuse * Math.cos(getAngle());
-    const rows = Math.ceil(rowsHeight / (rowHeight + rowGap));
-    return rows;
-  }
-
-  // TODO
-  function _getColumns(rowIndex: number, rowHeight: number, colWidth: number) {
-    const rightAngle1 = (rowIndex + 1) * rowHeight * (1 / Math.tan(getAngle()));
-    const rightAngle2 = (rowIndex + 1) * rowHeight * (1 / Math.tan(getAngle(90 - degree)));
-    const colsWidth = rightAngle1 + rightAngle2;
-    console.log(colsWidth);
-    const cols = Math.ceil(colsWidth / (colWidth + columnGap));
-    console.log(cols);
-    return cols;
   }
 
   function tempSave() {
@@ -89,17 +70,27 @@ export function backmoji(options?: BackmojiOptions) {
     };
   }
 
+  function render() {
+    const [actualWidth, actualHeight] = measureRectangle(canvas.width, canvas.height, degree);
+    const { width, height } = _measureText("Hello, World!");
+    const rowCount = _calculateColumnCount(actualHeight, height);
+    const columnCount = _calculateColumnCount(actualWidth, width);
+  }
+
+  function _calculateRowCount(height: number, rowHeight: number) {
+    return Math.ceil(height / (rowHeight + rowGap));
+  }
+
+  function _calculateColumnCount(width: number, columnWidth: number) {
+    return Math.ceil(width / (columnWidth + columnGap));
+  }
+
   function setTextPattern(text: string) {
     const { width, height } = _measureText(text);
-    const rows = _getRows(height);
     ctx.textBaseline = "top";
     ctx.save();
     ctx.rotate(getAngle());
     ctx.fillText(text, 0, 0);
-  }
-
-  function renderRow(rowIndex: number) {
-
   }
 
   return {
@@ -110,8 +101,6 @@ export function backmoji(options?: BackmojiOptions) {
     _measureText,
 
     getSize,
-    _getRows,
-    _getColumns,
     tempSave,
   };
 }
