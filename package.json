@@ -15,11 +15,13 @@
     "url": "git+https://github.com/Bernankez/backmoji.git"
   },
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
-    "prepare": "husky install",
+    "prepare": "simple-git-hooks",
+    "prepublishOnly": "pnpm build",
     "clean": "rimraf --glob packages/*/{dist}",
-    "dev": "pnpm -F \"./packages/core\" dev && pnpm -F \"./playground\" dev",
-    "build": "pnpm clean && pnpm -r -F \"./packages/*\" build",
+    "play": "pnpm -F \"./playground\" dev",
+    "play:build": "pnpm -F \"./playground\" build",
+    "dev": "pnpm -F \"./packages/core\" dev && pnpm play",
+    "build": "pnpm clean && pnpm -r -F \"./packages/*\" build && pnpm play:build",
     "release": "bumpp -r",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -34,9 +36,9 @@
     "bumpp": "^9.4.0",
     "eslint": "^8.57.0",
     "happy-dom": "^14.0.0",
-    "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
     "rimraf": "^5.0.5",
+    "simple-git-hooks": "^2.11.0",
     "tsup": "^8.0.2",
     "tsx": "^4.7.1",
     "typescript": "^5.4.2",
@@ -44,6 +46,9 @@
     "vite": "^5.1.6",
     "vite-plugin-dts": "^3.7.3",
     "vitest": "^1.4.0"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
   },
   "lint-staged": {
     "*": [
