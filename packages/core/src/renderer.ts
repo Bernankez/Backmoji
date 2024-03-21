@@ -14,6 +14,10 @@ export interface RenderContext {
   renderItemHeight: number;
   rowGap: number;
   columnGap: number;
+  rowCount: number;
+  columnCount: number;
+  width: number;
+  height: number;
 }
 
 export function textRender(context: RenderContext) {
@@ -36,9 +40,9 @@ export function createTextRenderer(text: string, options?: CreateTextRendererOpt
     ctx.translate(x, y);
     ctx.rotate(angle);
     const { width: renderItemWidth, height: renderItemHeight } = measureText(text);
-    const [row, column] = calculateRenderCount(renderItemWidth, renderItemHeight);
-    for (let rowIndex = 0; rowIndex < row; rowIndex++) {
-      for (let columnIndex = 0; columnIndex < column; columnIndex++) {
+    const [rowCount, columnCount] = calculateRenderCount(renderItemWidth, renderItemHeight);
+    for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+      for (let columnIndex = 0; columnIndex < columnCount; columnIndex++) {
         const renderContext: RenderContext = {
           ctx,
           text,
@@ -48,6 +52,10 @@ export function createTextRenderer(text: string, options?: CreateTextRendererOpt
           renderItemHeight,
           rowGap,
           columnGap,
+          rowCount,
+          columnCount,
+          width,
+          height,
         };
         render(renderContext);
       }

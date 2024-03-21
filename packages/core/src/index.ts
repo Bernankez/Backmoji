@@ -107,6 +107,7 @@ export function backmoji(renderer: Renderer, options?: BackmojiOptions) {
 
   return {
     canvas,
+    ctx,
 
     render,
     setSize,
