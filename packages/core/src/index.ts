@@ -1,6 +1,9 @@
 import { makeDestructurable } from "@bernankez/utils";
 import { assert } from "./utils";
-import { degreeToAngle, measureRectangle } from "./utils/math";
+import { degreeToAngle } from "./utils/math";
+import { calculateRenderCount, calculateTranslate, measureText } from "./utils/shared";
+
+export * from "./renderer";
 
 export interface BackmojiOptions {
   width?: number;
@@ -10,7 +13,23 @@ export interface BackmojiOptions {
   columnGap?: number;
 }
 
-export function backmoji(options?: BackmojiOptions) {
+export interface RendererContext {
+  ctx: CanvasRenderingContext2D;
+  width: number;
+  height: number;
+  rowGap: number;
+  columnGap: number;
+  degree: number;
+  angle: number;
+
+  measureText: (text: string) => { width: number;fontHeight: number;height: number };
+  calculateRenderCount: (renderItemWidth: number, renderItemHeight: number) => number[] & { row: number;column: number };
+  calculateTranslate: () => number[] & { x: number;y: number };
+}
+
+export type Renderer = (context: RendererContext) => void;
+
+export function backmoji(renderer: Renderer, options?: BackmojiOptions) {
   const { width = 300, height = 150, degree = 0, rowGap = 0, columnGap = 0 } = options || {};
 
   const canvas = document.createElement("canvas");
@@ -47,60 +66,52 @@ export function backmoji(options?: BackmojiOptions) {
     const [width, height] = getSize();
     w = w ?? width;
     h = h ?? height;
-    const restore = tempSave();
     canvas.width = w;
     canvas.height = h;
-    restore();
   }
 
-  function _setBackgroundColor() {
+  function createRendererContext(): RendererContext {
+    const _degree = degree % 360;
+    const _measureText: RendererContext["measureText"] = text => measureText(ctx, text);
     const [width, height] = getSize();
-    ctx.fillStyle = "#e6e6e6";
-    ctx.fillRect(0, 0, width, height);
-  }
-
-  function _measureText(text: string) {
-    const metrics = ctx.measureText(text);
-    const fontHeight = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
-    const height = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
-    return {
-      width: metrics.width,
-      fontHeight,
+    const _calculateRederCount: RendererContext["calculateRenderCount"] = (renderItemWidth, renderItemHeight) => calculateRenderCount({
+      width,
       height,
+      degree: _degree,
+      renderItemWidth,
+      renderItemHeight,
+      rowGap,
+      columnGap,
+    });
+    const _calculateTranslate = () => calculateTranslate(width, height, _degree);
+
+    return {
+      ctx,
+      width,
+      height,
+      rowGap,
+      columnGap,
+      degree: _degree,
+      angle: getAngle(_degree),
+
+      measureText: _measureText,
+      calculateRenderCount: _calculateRederCount,
+      calculateTranslate: _calculateTranslate,
     };
   }
 
   function render() {
-    const [actualWidth, actualHeight] = measureRectangle(canvas.width, canvas.height, degree);
-    const { width, height } = _measureText("Hello, World!");
-    const rowCount = _calculateColumnCount(actualHeight, height);
-    const columnCount = _calculateColumnCount(actualWidth, width);
-  }
-
-  function _calculateRowCount(height: number, rowHeight: number) {
-    return Math.ceil(height / (rowHeight + rowGap));
-  }
-
-  function _calculateColumnCount(width: number, columnWidth: number) {
-    return Math.ceil(width / (columnWidth + columnGap));
-  }
-
-  function setTextPattern(text: string) {
-    const { width, height } = _measureText(text);
-    ctx.textBaseline = "top";
-    ctx.save();
-    ctx.rotate(getAngle());
-    ctx.fillText(text, 0, 0);
+    const context = createRendererContext();
+    renderer(context);
   }
 
   return {
     canvas,
-    setSize,
-    setTextPattern,
-    _setBackgroundColor,
-    _measureText,
 
+    render,
+    setSize,
     getSize,
+
     tempSave,
   };
 }

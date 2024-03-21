@@ -12,17 +12,10 @@ export function getRightAngleSides(hypotenuseLength: number, degree: number) {
 
 export function measureRectangle(width: number, height: number, degree: number) {
   degree = degree % 180;
-  const [h1, w2] = getRightAngleSides(width, degree);
-  const [w1, h2] = getRightAngleSides(height, degree);
-  let w: number, h: number;
-  w = w1 + w2;
-  h = h1 + h2;
-  if (degree < 90) {
-    // Swap w and h
-    const t = w;
-    w = h;
-    h = t;
-  }
+  const [w1, h2] = getRightAngleSides(width, degree);
+  const [h1, w2] = getRightAngleSides(height, degree);
+  const w = Math.abs(w1) + Math.abs(w2);
+  const h = Math.abs(h1) + Math.abs(h2);
   return makeDestructurable({
     w,
     h,
