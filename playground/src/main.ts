@@ -5,39 +5,37 @@ let timestamp = 0;
 
 const renderer = createTextRenderer("👌", {
   font: "60px Arial",
-  custom({ ctx, text, rowIndex, columnIndex, renderItemWidth, renderItemHeight, rowGap, columnGap, width }) {
-    // TODO render with animation
-    let offset = timestamp;
-    const w = renderItemWidth + columnGap;
-    if (offset > 2 * w) {
-      offset = offset % (2 * w);
-    }
-    const x = columnIndex * (renderItemWidth + columnGap) + offset;
-    const y = rowIndex * (renderItemHeight + rowGap);
-    // Render twice
-    // if (x > width) {
-    //   y = y + renderItemHeight + rowGap;
-    // }
-    if ((columnIndex - rowIndex) % 2 === 0) {
-      ctx.fillText(text, x, y);
-      if (x > width) {
-        let newY = y;
-        if ((x > width - renderItemWidth) && y % 2 === 0) {
-          newY = y + renderItemHeight + rowGap;
+  custom({ ctx, text, renderItemWidth, renderItemHeight, rowGap, columnGap, columnCount, rowCount }) {
+    for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+      let from: number, to: number;
+      if (rowIndex % 2 === 0) {
+        from = -2;
+        to = columnCount;
+      } else {
+        from = columnCount;
+        to = -2;
+      }
+      for (let columnIndex = from; columnIndex < to; columnIndex++) {
+        let offset = timestamp;
+        offset = offset % (2 * (renderItemWidth + columnGap));
+        // TODO
+        const x = columnIndex * (renderItemWidth + columnGap) + (rowIndex % 2 === 0 ? offset : -offset);
+        const y = rowIndex * (renderItemHeight + rowGap);
+        if ((columnIndex - rowIndex) % 2 === 0) {
+          ctx.fillText(text, x, y);
         }
-        ctx.fillText(text, x - width + columnGap - renderItemWidth, newY);
       }
     }
   },
 });
 
 const { canvas, ctx, render, setSize } = backmoji(renderer, {
-  degree: 0,
+  degree: 340,
   rowGap: 20,
   columnGap: 20,
 });
 
-let raf = 0;
+let raf: number | undefined;
 
 function play() {
   timestamp++;
@@ -49,6 +47,7 @@ function play() {
 function pause() {
   if (raf) {
     cancelAnimationFrame(raf);
+    raf = undefined;
   }
 }
 
