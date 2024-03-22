@@ -8,8 +8,6 @@ export interface CreateTextRendererOptions {
 export interface RenderContext {
   ctx: CanvasRenderingContext2D;
   text: string;
-  rowIndex: number;
-  columnIndex: number;
   renderItemWidth: number;
   renderItemHeight: number;
   rowGap: number;
@@ -18,13 +16,19 @@ export interface RenderContext {
   columnCount: number;
   width: number;
   height: number;
+  angle: number;
+  degree: number;
 }
 
 export function textRender(context: RenderContext) {
-  const { ctx, text, rowIndex, columnIndex, renderItemWidth, renderItemHeight, rowGap, columnGap } = context;
-  const x = columnIndex * (renderItemWidth + columnGap);
-  const y = rowIndex * (renderItemHeight + rowGap);
-  ctx.fillText(text, x, y);
+  const { ctx, text, renderItemWidth, renderItemHeight, rowGap, columnGap, columnCount, rowCount } = context;
+  for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+    for (let columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+      const x = columnIndex * (renderItemWidth + columnGap);
+      const y = rowIndex * (renderItemHeight + rowGap);
+      ctx.fillText(text, x, y);
+    }
+  }
 }
 
 export function createTextRenderer(text: string, options?: CreateTextRendererOptions) {
@@ -37,29 +41,27 @@ export function createTextRenderer(text: string, options?: CreateTextRendererOpt
     }
     ctx.textBaseline = "top";
     const { x, y } = calculateTranslate();
+    ctx.save();
     ctx.translate(x, y);
     ctx.rotate(angle);
     const { width: renderItemWidth, height: renderItemHeight } = measureText(text);
     const [rowCount, columnCount] = calculateRenderCount(renderItemWidth, renderItemHeight);
-    for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-      for (let columnIndex = 0; columnIndex < columnCount; columnIndex++) {
-        const renderContext: RenderContext = {
-          ctx,
-          text,
-          rowIndex,
-          columnIndex,
-          renderItemWidth,
-          renderItemHeight,
-          rowGap,
-          columnGap,
-          rowCount,
-          columnCount,
-          width,
-          height,
-        };
-        render(renderContext);
-      }
-    }
+    const renderContext: RenderContext = {
+      ctx,
+      text,
+      renderItemWidth,
+      renderItemHeight,
+      rowGap,
+      columnGap,
+      rowCount,
+      columnCount,
+      width,
+      height,
+      angle,
+      degree,
+    };
+    render(renderContext);
+    ctx.restore();
   };
   return renderer;
 }
