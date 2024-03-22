@@ -52,7 +52,7 @@ export function backmoji(renderer: Renderer, options?: BackmojiOptions) {
     return degreeToAngle(deg ?? degree);
   }
 
-  function tempSave() {
+  function saveImageData() {
     const [width, height] = getSize();
     const imageData = ctx.getImageData(0, 0, width, height);
 
@@ -113,6 +113,6 @@ export function backmoji(renderer: Renderer, options?: BackmojiOptions) {
     setSize,
     getSize,
 
-    tempSave,
+    saveImageData,
   };
 }
