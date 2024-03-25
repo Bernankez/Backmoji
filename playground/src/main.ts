@@ -1,12 +1,13 @@
-import { backmoji, createTextRenderer } from "backmoji";
+import { backmoji, createImageRenderer, createTextRenderer } from "backmoji";
 import "./style.css";
 import { Animate } from "./animation";
+import PawImg from "./assets/paw.svg";
 
 const animate = new Animate(true);
 
-const renderer = createTextRenderer("🤣", {
+const textRenderer = createTextRenderer("🤣", {
   font: "60px Arial",
-  custom({ ctx, text, renderItemWidth, renderItemHeight, rowGap, columnGap, columnCount, rowCount }) {
+  custom({ ctx, item, renderItemWidth, renderItemHeight, rowGap, columnGap, columnCount, rowCount }) {
     for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
       let from: number, to: number;
       if (rowIndex % 2 === 0) {
@@ -22,16 +23,52 @@ const renderer = createTextRenderer("🤣", {
         const x = columnIndex * (renderItemWidth + columnGap) + (rowIndex % 2 === 0 ? 1 : -1) * offset;
         const y = rowIndex * (renderItemHeight + rowGap);
         if ((columnIndex - rowIndex) % 2 === 0) {
-          ctx.fillText(text, x, y);
+          ctx.fillText(item, x, y);
         }
       }
     }
   },
 });
 
-const { canvas, ctx, render, setSize, getSize } = backmoji(renderer, {
-  degree: -20,
-  rowGap: 20,
+function loadImg() {
+  return new Promise<HTMLImageElement>((resolve) => {
+    const image = new Image();
+    image.src = PawImg;
+    image.onload = () => {
+      resolve(image);
+    };
+  });
+}
+
+const img = await loadImg();
+
+const imageRenderer = createImageRenderer(img, {
+  custom({ ctx, item, renderItemWidth, renderItemHeight, rowGap, columnGap, columnCount, rowCount }) {
+    for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+      let from: number, to: number;
+      if (rowIndex % 2 === 0) {
+        from = -2;
+        to = columnCount;
+      } else {
+        from = 0;
+        to = columnCount + 2;
+      }
+      for (let columnIndex = from; columnIndex < to; columnIndex++) {
+        let offset = animate.timestamp;
+        offset = offset % (2 * (renderItemWidth + columnGap));
+        const x = columnIndex * (renderItemWidth + columnGap) + (rowIndex % 2 === 0 ? 1 : -1) * offset;
+        const y = rowIndex * (renderItemHeight + rowGap);
+        if ((columnIndex - rowIndex) % 2 === 0) {
+          ctx.drawImage(item, x, y, renderItemWidth, renderItemHeight);
+        }
+      }
+    }
+  },
+});
+
+const { canvas, ctx, render, setSize, getSize } = backmoji(imageRenderer, {
+  degree: -30,
+  rowGap: 40,
   columnGap: 20,
 });
 

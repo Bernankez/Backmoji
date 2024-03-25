@@ -37,7 +37,7 @@ export class Animate {
     if (!this.#cb) {
       return;
     }
-    this.timestamp++;
+    this.timestamp += 0.5;
     this.#stats.begin();
     this.#cb?.();
     this.#stats.end();
