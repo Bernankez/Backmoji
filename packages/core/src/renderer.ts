@@ -18,6 +18,8 @@ export interface RenderContext {
   height: number;
   angle: number;
   degree: number;
+  originX: number;
+  originY: number;
 }
 
 export function textRender(context: RenderContext) {
@@ -59,6 +61,8 @@ export function createTextRenderer(text: string, options?: CreateTextRendererOpt
       height,
       angle,
       degree,
+      originX: x,
+      originY: y,
     };
     render(renderContext);
     ctx.restore();
