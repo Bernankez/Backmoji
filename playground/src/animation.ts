@@ -53,6 +53,7 @@ export class Animate {
 
   reset() {
     this.timestamp = 0;
+    this.pause();
     this.#cb?.();
   }
 }
