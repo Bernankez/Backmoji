@@ -1,8 +1,8 @@
 import { backmoji, createTextRenderer } from "backmoji";
 import "./style.css";
-import { monitor } from "./stats";
+import { Animate } from "./animation";
 
-let timestamp = 0;
+const animate = new Animate(true);
 
 const renderer = createTextRenderer("🤣", {
   font: "60px Arial",
@@ -17,7 +17,7 @@ const renderer = createTextRenderer("🤣", {
         to = columnCount + 2;
       }
       for (let columnIndex = from; columnIndex < to; columnIndex++) {
-        let offset = timestamp;
+        let offset = animate.timestamp;
         offset = offset % (2 * (renderItemWidth + columnGap));
         const x = columnIndex * (renderItemWidth + columnGap) + (rowIndex % 2 === 0 ? 1 : -1) * offset;
         const y = rowIndex * (renderItemHeight + rowGap);
@@ -35,36 +35,28 @@ const { canvas, ctx, render, setSize, getSize } = backmoji(renderer, {
   columnGap: 20,
 });
 
-let raf: number | undefined;
-
-function play() {
-  timestamp++;
+function cb() {
   const [w, h] = getSize();
   ctx.clearRect(0, 0, w, h);
   render();
-  // raf = requestAnimationFrame(play);
 }
 
-monitor(play);
-
-function pause() {
-  if (raf) {
-    cancelAnimationFrame(raf);
-    raf = undefined;
-  }
-}
+animate.setCallback(cb);
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <button id="play">play</button>
   <button id="pause">pause</button>
+  <button id="reset">reset</button>
   <div id="wrapper"></div>
 `;
 
 const wrapper = document.querySelector<HTMLDivElement>("#wrapper")!;
 const playButton = document.querySelector<HTMLButtonElement>("#play")!;
 const pauseButton = document.querySelector<HTMLButtonElement>("#pause")!;
-playButton.addEventListener("click", play);
-pauseButton.addEventListener("click", pause);
+const resetButton = document.querySelector<HTMLButtonElement>("#reset")!;
+playButton.addEventListener("click", animate.play.bind(animate));
+pauseButton.addEventListener("click", animate.pause.bind(animate));
+resetButton.addEventListener("click", animate.reset.bind(animate));
 
 function updateSize() {
   const { width, height } = getComputedStyle(wrapper);

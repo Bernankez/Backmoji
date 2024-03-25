@@ -1,9 +1,11 @@
 import { makeDestructurable } from "@bernankez/utils";
 import { assert } from "./utils";
-import { degreeToAngle } from "./utils/math";
 import { calculateRenderCount, calculateTranslate, measureText } from "./utils/shared";
+import { degreeToAngle } from "./utils/math";
 
 export * from "./renderer";
+export * from "./utils/shared";
+export * from "./utils/math";
 
 export interface BackmojiOptions {
   width?: number;
@@ -48,8 +50,13 @@ export function backmoji(renderer: Renderer, options?: BackmojiOptions) {
     }, [w, h]);
   }
 
-  function getAngle(deg?: number) {
-    return degreeToAngle(deg ?? degree);
+  function setSize(size: { w?: number; h?: number }) {
+    let { w, h } = size;
+    const [width, height] = getSize();
+    w = w ?? width;
+    h = h ?? height;
+    canvas.width = w;
+    canvas.height = h;
   }
 
   function saveImageData() {
@@ -59,15 +66,6 @@ export function backmoji(renderer: Renderer, options?: BackmojiOptions) {
     return () => {
       ctx.putImageData(imageData, 0, 0);
     };
-  }
-
-  function setSize(size: { w?: number; h?: number }) {
-    let { w, h } = size;
-    const [width, height] = getSize();
-    w = w ?? width;
-    h = h ?? height;
-    canvas.width = w;
-    canvas.height = h;
   }
 
   function createRendererContext(): RendererContext {
@@ -92,7 +90,7 @@ export function backmoji(renderer: Renderer, options?: BackmojiOptions) {
       rowGap,
       columnGap,
       degree: _degree,
-      angle: getAngle(_degree),
+      angle: degreeToAngle(_degree),
 
       measureText: _measureText,
       calculateRenderCount: _calculateRederCount,
