@@ -30,7 +30,7 @@ const renderer = createTextRenderer("🤣", {
 });
 
 const { canvas, ctx, render, setSize, getSize } = backmoji(renderer, {
-  degree: 340,
+  degree: -20,
   rowGap: 20,
   columnGap: 20,
 });
