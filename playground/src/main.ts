@@ -1,9 +1,10 @@
 import { backmoji, createTextRenderer } from "backmoji";
 import "./style.css";
+import { monitor } from "./stats";
 
 let timestamp = 0;
 
-const renderer = createTextRenderer("👌", {
+const renderer = createTextRenderer("🤣", {
   font: "60px Arial",
   custom({ ctx, text, renderItemWidth, renderItemHeight, rowGap, columnGap, columnCount, rowCount }) {
     for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
@@ -12,14 +13,13 @@ const renderer = createTextRenderer("👌", {
         from = -2;
         to = columnCount;
       } else {
-        from = columnCount;
-        to = -2;
+        from = 0;
+        to = columnCount + 2;
       }
       for (let columnIndex = from; columnIndex < to; columnIndex++) {
         let offset = timestamp;
         offset = offset % (2 * (renderItemWidth + columnGap));
-        // TODO
-        const x = columnIndex * (renderItemWidth + columnGap) + (rowIndex % 2 === 0 ? offset : -offset);
+        const x = columnIndex * (renderItemWidth + columnGap) + (rowIndex % 2 === 0 ? 1 : -1) * offset;
         const y = rowIndex * (renderItemHeight + rowGap);
         if ((columnIndex - rowIndex) % 2 === 0) {
           ctx.fillText(text, x, y);
@@ -29,7 +29,7 @@ const renderer = createTextRenderer("👌", {
   },
 });
 
-const { canvas, ctx, render, setSize } = backmoji(renderer, {
+const { canvas, ctx, render, setSize, getSize } = backmoji(renderer, {
   degree: 340,
   rowGap: 20,
   columnGap: 20,
@@ -39,10 +39,13 @@ let raf: number | undefined;
 
 function play() {
   timestamp++;
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const [w, h] = getSize();
+  ctx.clearRect(0, 0, w, h);
   render();
-  raf = requestAnimationFrame(play);
+  // raf = requestAnimationFrame(play);
 }
+
+monitor(play);
 
 function pause() {
   if (raf) {
