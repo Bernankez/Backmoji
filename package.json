@@ -31,7 +31,7 @@
     "fix": "eslint . --fix"
   },
   "devDependencies": {
-    "@bernankez/eslint-config": "^0.7.4",
+    "@bernankez/eslint-config": "1.0.0-beta.1",
     "@bernankez/utils": "^0.6.0",
     "@types/node": "^20.11.30",
     "backmoji": "workspace:*",

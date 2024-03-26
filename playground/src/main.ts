@@ -5,7 +5,7 @@ import PawImg from "./assets/paw.svg";
 
 const animate = new Animate(true);
 
-const textRenderer = createTextRenderer("🤣", {
+const _textRenderer = createTextRenderer("🤣", {
   font: "60px Arial",
   custom({ ctx, item, renderItemWidth, renderItemHeight, rowGap, columnGap, columnCount, rowCount }) {
     for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
@@ -13,7 +13,8 @@ const textRenderer = createTextRenderer("🤣", {
       if (rowIndex % 2 === 0) {
         from = -2;
         to = columnCount;
-      } else {
+      }
+      else {
         from = 0;
         to = columnCount + 2;
       }
@@ -22,9 +23,8 @@ const textRenderer = createTextRenderer("🤣", {
         offset = offset % (2 * (renderItemWidth + columnGap));
         const x = columnIndex * (renderItemWidth + columnGap) + (rowIndex % 2 === 0 ? 1 : -1) * offset;
         const y = rowIndex * (renderItemHeight + rowGap);
-        if ((columnIndex - rowIndex) % 2 === 0) {
+        if ((columnIndex - rowIndex) % 2 === 0)
           ctx.fillText(item, x, y);
-        }
       }
     }
   },
@@ -49,7 +49,8 @@ const imageRenderer = createImageRenderer(img, {
       if (rowIndex % 2 === 0) {
         from = -2;
         to = columnCount;
-      } else {
+      }
+      else {
         from = 0;
         to = columnCount + 2;
       }
@@ -58,9 +59,8 @@ const imageRenderer = createImageRenderer(img, {
         offset = offset % (2 * (renderItemWidth + columnGap));
         const x = columnIndex * (renderItemWidth + columnGap) + (rowIndex % 2 === 0 ? 1 : -1) * offset;
         const y = rowIndex * (renderItemHeight + rowGap);
-        if ((columnIndex - rowIndex) % 2 === 0) {
+        if ((columnIndex - rowIndex) % 2 === 0)
           ctx.drawImage(item, x, y, renderItemWidth, renderItemHeight);
-        }
       }
     }
   },

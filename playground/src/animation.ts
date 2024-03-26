@@ -16,14 +16,15 @@ export class Animate {
   }
 
   setStat(showStat: boolean) {
-    if (this.#showStat === showStat) {
+    if (this.#showStat === showStat)
       return;
-    }
+
     if (showStat) {
       this.#stats.dom.style.left = "unset";
       this.#stats.dom.style.right = "0";
       document.body.appendChild(this.#stats.dom);
-    } else {
+    }
+    else {
       document.body.removeChild(this.#stats.dom);
     }
     this.#showStat = showStat;
@@ -34,9 +35,9 @@ export class Animate {
   }
 
   play() {
-    if (!this.#cb) {
+    if (!this.#cb)
       return;
-    }
+
     this.timestamp += 0.5;
     this.#stats.begin();
     this.#cb?.();
