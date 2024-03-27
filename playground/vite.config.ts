@@ -14,7 +14,8 @@ export default defineConfig(() => ({
       /**
        * @see https://github.com/unjs/unbuild/issues/121
        */
-      backmoji: resolve("../packages/core/src/index.ts"),
+      "backmoji": resolve("../packages/core/src/index.ts"),
+      "@backmoji/react": resolve("../packages/react/src/index.ts"),
     },
   },
 }));

@@ -40,16 +40,13 @@ export function calculateTranslate(width: number, height: number, degree: number
   if (degree < 90) {
     x = rightSide;
     y = -adjacentSide;
-  }
-  else if (degree < 180) {
+  } else if (degree < 180) {
     x = width + adjacentSide;
     y = rightSide;
-  }
-  else if (degree < 270) {
+  } else if (degree < 270) {
     x = width - rightSide;
     y = height + adjacentSide;
-  }
-  else {
+  } else {
     x = -adjacentSide;
     y = height - rightSide;
   }

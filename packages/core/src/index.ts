@@ -70,8 +70,9 @@ export function backmoji(renderer: Renderer, options?: BackmojiOptions) {
 
   function createRendererContext(): RendererContext {
     let _degree = degree % 360;
-    if (_degree < 0)
+    if (_degree < 0) {
       _degree = 360 + _degree;
+    }
 
     const _measureText: RendererContext["measureText"] = text => measureText(ctx, text);
     const [width, height] = getSize();

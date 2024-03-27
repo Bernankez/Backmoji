@@ -38,8 +38,9 @@ export function createTextRenderer(text: string, options?: CreateTextRendererOpt
   const render = custom ?? textRender;
   const renderer: Renderer = (context) => {
     const { ctx, rowGap, columnGap, measureText, degree, angle, calculateRenderCount, calculateTranslate, width, height } = context;
-    if (font)
+    if (font) {
       ctx.font = font;
+    }
 
     ctx.textBaseline = "top";
     const { x, y } = calculateTranslate();
