@@ -75,7 +75,7 @@ export function backmoji(renderer: Renderer, options?: BackmojiOptions) {
 
     const _measureText: RendererContext["measureText"] = text => measureText(ctx, text);
     const [width, height] = getSize();
-    const _calculateRederCount: RendererContext["calculateRenderCount"] = (renderItemWidth, renderItemHeight) => calculateRenderCount({
+    const _calculateRenderCount: RendererContext["calculateRenderCount"] = (renderItemWidth, renderItemHeight) => calculateRenderCount({
       width,
       height,
       degree: _degree,
@@ -96,7 +96,7 @@ export function backmoji(renderer: Renderer, options?: BackmojiOptions) {
       angle: degreeToAngle(_degree),
 
       measureText: _measureText,
-      calculateRenderCount: _calculateRederCount,
+      calculateRenderCount: _calculateRenderCount,
       calculateTranslate: _calculateTranslate,
     };
   }
