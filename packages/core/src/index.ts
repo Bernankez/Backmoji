@@ -50,8 +50,7 @@ export function backmoji(renderer: Renderer, options?: BackmojiOptions) {
     }, [w, h]);
   }
 
-  function setSize(size: { w?: number; h?: number }) {
-    let { w, h } = size;
+  function setSize(w: number | undefined | null, h: number | undefined | null) {
     const [width, height] = getSize();
     w = w ?? width;
     h = h ?? height;
