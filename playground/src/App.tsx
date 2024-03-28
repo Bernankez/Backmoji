@@ -5,7 +5,9 @@ import { useEventListener } from "ahooks";
 import Paw from "./assets/paw.svg";
 import { animate } from "./animation";
 
-const { play, setCallback, getTimestamp, reset } = animate();
+const { play, setCallback, getTimestamp, reset } = animate({
+  speed: 0.3,
+});
 
 function App() {
   const backgroundRef = useRef<HTMLDivElement>(null);
