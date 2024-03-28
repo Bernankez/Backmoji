@@ -38,8 +38,7 @@ export function backmoji(renderer: Renderer, options?: BackmojiOptions) {
   const ctx = canvas.getContext("2d")!;
   assert(ctx, "Current environment does not support 2d canvas rendering");
 
-  canvas.width = width;
-  canvas.height = height;
+  setSize(width, height);
 
   function getSize() {
     const w = canvas.width;
@@ -54,8 +53,11 @@ export function backmoji(renderer: Renderer, options?: BackmojiOptions) {
     const [width, height] = getSize();
     w = w ?? width;
     h = h ?? height;
-    canvas.width = w;
-    canvas.height = h;
+    const ratio = window.devicePixelRatio;
+    canvas.style.width = `${w}px`;
+    canvas.style.height = `${h}px`;
+    canvas.width = w * ratio;
+    canvas.height = h * ratio;
   }
 
   function saveImageData() {

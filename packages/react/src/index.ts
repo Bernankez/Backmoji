@@ -1,20 +1,30 @@
 import { type BackmojiOptions, type CreateImageRendererOptions, type CreateTextRendererOptions, type Renderer, backmoji, createImageRenderer, createTextRenderer } from "backmoji";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-export type BackmojiReturn = ReturnType<typeof backmoji>;
+export type BackmojiResult = ReturnType<typeof backmoji>;
 
-export function useBackmoji(renderer?: Renderer, options?: BackmojiOptions) {
-  const [isMounted, setIsMounted] = useState(false);
+export function useBackmoji(renderer: Renderer | null, options?: BackmojiOptions, deps?: any[]) {
+  const [backmojiResult, setBackmojiResult] = useState<Partial<BackmojiResult>>({});
 
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
+    if (!renderer) {
+      return;
+    }
 
-  return (isMounted && renderer) ? backmoji(renderer, options) : undefined;
+    setBackmojiResult(backmoji(renderer, options));
+
+    return () => {
+      if (backmojiResult?.canvas) {
+        backmojiResult.canvas.remove();
+      }
+    };
+  }, [renderer, ...(deps || [])]);
+
+  return backmojiResult;
 }
 
-export function useImageRenderer(img: HTMLImageElement | string, options?: CreateImageRendererOptions) {
-  const [image, setImage] = useState<HTMLImageElement>();
+export function useImageLoader(img: HTMLImageElement | string) {
+  const [image, setImage] = useState<HTMLImageElement | null>(null);
 
   useEffect(() => {
     if (typeof img === "string") {
@@ -36,9 +46,20 @@ export function useImageRenderer(img: HTMLImageElement | string, options?: Creat
     });
   }
 
-  return image ? createImageRenderer(image, options) : undefined;
+  return image;
+}
+
+export function useImageRenderer(img: HTMLImageElement | null, options?: CreateImageRendererOptions) {
+  const renderer = useMemo(() => {
+    if (img) {
+      return createImageRenderer(img, options);
+    }
+    return null;
+  }, [img]);
+
+  return renderer;
 }
 
 export function useTextRenderer(text: string, options?: CreateTextRendererOptions) {
-  return createTextRenderer(text, options);
+  return useMemo(() => createTextRenderer(text, options), [text]);
 }

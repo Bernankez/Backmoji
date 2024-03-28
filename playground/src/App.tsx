@@ -1,13 +1,16 @@
 import "./App.css";
-import { useEffect, useRef, useState } from "react";
-import { useBackmoji, useImageRenderer, useTextRenderer } from "@backmoji/react";
+import { useEffect, useRef } from "react";
+import { useBackmoji, useImageLoader, useImageRenderer, useTextRenderer } from "@backmoji/react";
+import { useEventListener } from "ahooks";
 import Paw from "./assets/paw.svg";
-import { Animate } from "./animation";
+import { animate } from "./animation";
 
-const animate = new Animate(true);
+const { play, setCallback, getTimestamp, reset } = animate();
 
 function App() {
-  const textRenderer = useTextRenderer("😯", {
+  const backgroundRef = useRef<HTMLDivElement>(null);
+
+  const _textRenderer = useTextRenderer("🤣", {
     font: "60px Arial",
     custom({ ctx, item, renderItemWidth, renderItemHeight, rowGap, columnGap, columnCount, rowCount }) {
       for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
@@ -20,7 +23,7 @@ function App() {
           to = columnCount + 2;
         }
         for (let columnIndex = from; columnIndex < to; columnIndex++) {
-          let offset = animate.timestamp;
+          let offset = getTimestamp();
           offset = offset % (2 * (renderItemWidth + columnGap));
           const x = columnIndex * (renderItemWidth + columnGap) + (rowIndex % 2 === 0 ? 1 : -1) * offset;
           const y = rowIndex * (renderItemHeight + rowGap);
@@ -31,7 +34,9 @@ function App() {
       }
     },
   });
-  const imageRenderer = useImageRenderer(Paw, {
+
+  const img = useImageLoader(Paw);
+  const imageRenderer = useImageRenderer(img, {
     custom({ ctx, item, renderItemWidth, renderItemHeight, rowGap, columnGap, columnCount, rowCount }) {
       for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
         let from: number, to: number;
@@ -43,7 +48,7 @@ function App() {
           to = columnCount + 2;
         }
         for (let columnIndex = from; columnIndex < to; columnIndex++) {
-          let offset = animate.timestamp;
+          let offset = getTimestamp();
           offset = offset % (2 * (renderItemWidth + columnGap));
           const x = columnIndex * (renderItemWidth + columnGap) + (rowIndex % 2 === 0 ? 1 : -1) * offset;
           const y = rowIndex * (renderItemHeight + rowGap);
@@ -54,41 +59,57 @@ function App() {
       }
     },
   });
-  const backmojiReturn = useBackmoji(textRenderer, {
+  const { getSize, setSize, render, canvas, ctx } = useBackmoji(imageRenderer, {
     degree: -30,
     rowGap: 40,
     columnGap: 20,
   });
-  const backgroundRef = useRef<HTMLDivElement>(null);
+
+  function animationCb() {
+    if (getSize && ctx) {
+      const { w, h } = getSize();
+      ctx?.clearRect(0, 0, w, h);
+      render?.();
+    }
+  }
+  setCallback(animationCb);
+
+  useEventListener("resize", () => {
+    setSize?.(window.innerWidth, window.innerHeight);
+    animationCb();
+  });
+
+  function setCanvasStyle(canvas: HTMLCanvasElement) {
+    canvas.style.position = "absolute";
+    canvas.style.top = "0";
+    canvas.style.left = "0";
+    canvas.style.zIndex = "-1";
+    canvas.style.opacity = "0.2";
+  }
 
   useEffect(() => {
-    if (backmojiReturn) {
-      const { canvas, setSize, getSize, ctx, render } = backmojiReturn;
-      function cb() {
-        const [w, h] = getSize();
-        ctx.clearRect(0, 0, w, h);
-        render();
+    if (canvas) {
+      if (backgroundRef.current) {
+        backgroundRef.current.appendChild(canvas);
+        setCanvasStyle(canvas);
+        setSize?.(window.innerWidth, window.innerHeight);
+        render?.();
+        play();
       }
 
-      animate.setCallback(cb);
-      render();
-      backgroundRef.current?.appendChild(canvas);
-
       return () => {
-        backgroundRef.current?.removeChild(canvas);
+        reset();
+        canvas.remove();
       };
     }
-  }, [backmojiReturn]);
+  }, [canvas]);
 
   return (
     <div ref={backgroundRef}>
       <section className="h-screen flex items-center justify-center">
-        <h1 className="font-bold text-7xl md:text-8xl lg:text-9xl text-orange-500">
+        <h1 className="font-bold font-italic text-7xl md:text-8xl lg:text-9xl text-orange-500">
           Backmoji
         </h1>
-        <button onClick={animate.play.bind(animate)}>play</button>
-        <button onClick={animate.pause.bind(animate)}>pause</button>
-        <button onClick={animate.reset.bind(animate)}>reset</button>
       </section>
     </div>
   );

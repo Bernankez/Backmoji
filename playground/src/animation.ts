@@ -1,61 +1,96 @@
+import { isDefined } from "@bernankez/utils";
 import Stats from "stats.js";
 
 export type Fn = () => void;
 
-export class Animate {
-  #showStat: boolean = false;
-  #stats: Stats;
-  #cb: Fn | undefined = undefined;
-  #raf: number | undefined = undefined;
-  public timestamp = 0;
+export function animate(options?: {
+  showStat?: boolean;
+  speed?: number;
+}) {
+  let { showStat: _showStat = false, speed: _speed = 0.5 } = options || {};
 
-  constructor(showStat?: boolean) {
-    this.#stats = new Stats();
-    this.#stats.showPanel(0);
-    this.setStat(showStat ?? false);
+  let _callback: Fn | undefined;
+  let _isPlay = false;
+  let _timestamp = 0;
+  let _ref: number | undefined;
+
+  const _stats = new Stats();
+  _stats.showPanel(0);
+  setStat(_showStat);
+
+  function getTimestamp() {
+    return _timestamp;
   }
 
-  setStat(showStat: boolean) {
-    if (this.#showStat === showStat) {
+  function setStat(show: boolean) {
+    if (show === _showStat) {
       return;
     }
-
-    if (showStat) {
-      this.#stats.dom.style.left = "unset";
-      this.#stats.dom.style.right = "0";
-      document.body.appendChild(this.#stats.dom);
+    if (show) {
+      _stats.dom.style.left = "unset";
+      _stats.dom.style.right = "0";
+      document.body.appendChild(_stats.dom);
     } else {
-      document.body.removeChild(this.#stats.dom);
+      document.body.removeChild(_stats.dom);
     }
-    this.#showStat = showStat;
+    _showStat = show;
   }
 
-  setCallback(cb: Fn) {
-    this.#cb = cb;
+  function setSpeed(speed: number) {
+    _speed = speed;
   }
 
-  play() {
-    if (!this.#cb) {
+  function setCallback(callback: Fn) {
+    _callback = callback;
+  }
+
+  function toggle(play?: boolean) {
+    const isPlay = isDefined(play) ? play : !_isPlay;
+    if (isPlay === _isPlay) {
       return;
     }
-
-    this.timestamp += 0.5;
-    this.#stats.begin();
-    this.#cb?.();
-    this.#stats.end();
-    this.#raf = requestAnimationFrame(this.play.bind(this));
+    if (isPlay) {
+      _play();
+    } else {
+      _pause();
+    }
+    _isPlay = isPlay;
   }
 
-  pause() {
-    if (this.#raf) {
-      cancelAnimationFrame(this.#raf);
-      this.#raf = undefined;
+  function _play() {
+    if (!_callback) {
+      return;
+    }
+    _timestamp += _speed;
+    _stats.begin();
+    _callback();
+    _stats.end();
+    _ref = requestAnimationFrame(_play);
+  }
+
+  function _pause() {
+    if (_ref) {
+      cancelAnimationFrame(_ref);
+      _ref = undefined;
     }
   }
 
-  reset() {
-    this.timestamp = 0;
-    this.pause();
-    this.#cb?.();
+  function _reset() {
+    _timestamp = 0;
+    _pause();
+    _callback?.();
   }
+
+  return {
+    getTimestamp,
+
+    setStat,
+    setSpeed,
+    setCallback,
+
+    toggle,
+    play: _play,
+    pause: _pause,
+    reset: _reset,
+  };
 }
