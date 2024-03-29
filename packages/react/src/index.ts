@@ -1,24 +1,24 @@
 import { type BackmojiOptions, type CreateImageRendererOptions, type CreateTextRendererOptions, type Renderer, backmoji, createImageRenderer, createTextRenderer } from "backmoji";
-import { useEffect, useMemo, useState } from "react";
+import { type RefObject, useEffect, useMemo, useState } from "react";
 
 export type BackmojiResult = ReturnType<typeof backmoji>;
 
-export function useBackmoji(renderer: Renderer | null, options?: BackmojiOptions, deps?: any[]) {
+export function useBackmoji(renderer: Renderer | null, canvas: RefObject<HTMLCanvasElement>, options?: Omit<BackmojiOptions, "canvas">, deps?: any[]) {
   const [backmojiResult, setBackmojiResult] = useState<Partial<BackmojiResult>>({});
 
   useEffect(() => {
-    if (!renderer) {
+    if (!renderer || !canvas.current) {
       return;
     }
 
-    setBackmojiResult(backmoji(renderer, options));
+    setBackmojiResult(backmoji(renderer, { ...options, canvas: canvas.current }));
 
     return () => {
       if (backmojiResult?.canvas) {
         backmojiResult.canvas.remove();
       }
     };
-  }, [renderer, ...(deps || [])]);
+  }, [renderer, canvas, ...(deps || [])]);
 
   return backmojiResult;
 }

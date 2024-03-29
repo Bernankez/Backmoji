@@ -8,6 +8,7 @@ export * from "./utils/shared";
 export * from "./utils/math";
 
 export interface BackmojiOptions {
+  canvas?: HTMLCanvasElement;
   width?: number;
   height?: number;
   degree?: number;
@@ -32,9 +33,8 @@ export interface RendererContext {
 export type Renderer = (context: RendererContext) => void;
 
 export function backmoji(renderer: Renderer, options?: BackmojiOptions) {
-  const { width = 300, height = 150, degree = 0, rowGap = 0, columnGap = 0 } = options || {};
+  const { width = 300, height = 150, degree = 0, rowGap = 0, columnGap = 0, canvas = document.createElement("canvas") } = options || {};
 
-  const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d")!;
   assert(ctx, "Current environment does not support 2d canvas rendering");
 
