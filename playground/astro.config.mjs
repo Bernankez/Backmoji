@@ -1,6 +1,5 @@
 import { resolve } from "node:path";
 import { defineConfig } from "astro/config";
-import { transformerTwoslash } from "@shikijs/twoslash";
 import UnoCSS from "unocss/astro";
 import react from "@astrojs/react";
 import vue from "@astrojs/vue";
@@ -18,7 +17,7 @@ export default defineConfig({
         dark: "rose-pine-moon",
       },
       transformers: [
-        // transformerTwoslash()
+        // transformerTwoslash(),
       ],
     },
   },

@@ -17,7 +17,7 @@ const { title = "Backmoji" } = Astro.props.frontmatter || Astro.props;
     <Background client:only="react"></Background>
     <main class="max-w-3xl w-full">
       <Welcome></Welcome>
-      <section class="prose prose-orange dark:prose-invert p-4 text-base lg:text-xl md:text-lg">
+      <section class="p-4 text-base prose prose-orange lg:text-xl md:text-lg dark:prose-invert">
         <slot />
       </section>
     </main>
