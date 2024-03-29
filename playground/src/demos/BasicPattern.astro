@@ -1,0 +1,30 @@
+<div id="basic-pattern" class="h-full w-full overflow-hidden rounded-md bg-orange-50"></div>
+
+<script>
+import { backmoji, createTextRenderer } from "backmoji";
+
+const parent = document.querySelector("#basic-pattern")! as HTMLDivElement;
+
+const renderer = createTextRenderer("😯", {
+  font: "30px Aria",
+});
+const height = 160;
+const { canvas, render, setSize } = backmoji(renderer, {
+  degree: 30,
+  rowGap: 30,
+  columnGap: 40,
+  width: parent.clientWidth,
+  height,
+});
+
+const observer = new ResizeObserver((entries) => {
+  for(const entry of entries){
+    setSize(entry.contentRect.width, height);
+    render();
+  }
+})
+observer.observe(parent)
+
+parent.appendChild(canvas);
+render();
+</script>
