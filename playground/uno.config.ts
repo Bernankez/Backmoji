@@ -15,6 +15,12 @@ export default defineConfig({
       h4: {
         color: "#f97316",
       },
+      h5: {
+        color: "#f97316",
+      },
+      h6: {
+        color: "#f97316",
+      },
     }),
   })],
   shortcuts: {
