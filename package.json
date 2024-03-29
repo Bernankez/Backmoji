@@ -39,6 +39,7 @@
     "bumpp": "^9.4.0",
     "eslint": "^8.57.0",
     "eslint-formatter-mo": "^1.2.0",
+    "eslint-plugin-astro": "^0.33.1",
     "eslint-plugin-format": "^0.1.0",
     "happy-dom": "^14.0.0",
     "lint-staged": "^15.2.2",

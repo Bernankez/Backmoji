@@ -1,0 +1,36 @@
+---
+import type { MarkdownLayoutProps } from "astro";
+import Layout from "../layouts/Layout.astro";
+import { Background } from "../components/Background";
+import Welcome from "@/components/Welcome.astro";
+import "@shikijs/twoslash/style-rich.css";
+
+type Props = MarkdownLayoutProps<{
+  title: string;
+}>;
+
+const { title = "Backmoji" } = Astro.props.frontmatter || Astro.props;
+---
+
+<Layout title={title}>
+  <div id="root">
+    <Background client:only="react"></Background>
+    <main class="max-w-3xl w-full">
+      <Welcome></Welcome>
+      <section class="prose prose-orange dark:prose-invert p-4 text-base lg:text-xl md:text-lg">
+        <slot />
+      </section>
+    </main>
+  </div>
+</Layout>
+
+<style is:global>
+#root {
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  height: 100dvh;
+  width: 100vw;
+  overflow-x: hidden;
+}
+</style>

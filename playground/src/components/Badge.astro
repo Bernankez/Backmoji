@@ -1,0 +1,54 @@
+---
+import { version } from "~/package.json";
+
+interface Props {
+  type: "npm" | "github";
+}
+
+const { type } = Astro.props;
+
+const icon = getIcon(type);
+const link = getLink(type);
+const title = getTitle(type);
+
+// @unocss-include
+function getIcon(type: Props["type"]) {
+  switch (type) {
+      case "npm":
+        return "i-tabler:brand-npm text-2xl";
+      default:
+        return "i-tabler:brand-github text-xl";
+    }
+}
+
+
+function getLink(type: Props["type"]) {
+  switch (type) {
+    case "npm":
+      return "https://www.npmjs.com/package/backmoji";
+    case "github":
+      return "https://github.com/Bernankez/Backmoji";
+    default:
+      return "";
+  }
+}
+
+function getTitle(type: Props["type"]) {
+  switch (type) {
+    case "npm":
+      return `v${version}`;
+    case "github":
+      return "Backmoji";
+    default:
+      return "";
+  }
+}
+---
+<div class="group w-fit select-none b-1 b-orange-500 rounded-md b-solid bg-orange-50 text-sm transition hover:bg-orange-500">
+  <a class="h-full flex" href={link}>
+    <div class="h-full flex items-center b-r-1 b-r-orange-500 b-r-solid px-1">
+      <div class:list={["text-orange-800 group-hover:text-white transition", icon]}></div>
+    </div>
+    <span class="h-full flex items-center px-1 text-orange-800 transition group-hover:text-white">{title}</span>
+  </a>
+</div>

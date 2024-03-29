@@ -2,39 +2,36 @@
   "name": "playground",
   "type": "module",
   "version": "0.0.0",
-  "private": true,
   "scripts": {
-    "dev": "vite --open",
-    "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "typecheck": "astro check"
   },
   "dependencies": {
-    "@backmoji/react": "workspace:^",
-    "@bernankez/utils": "^0.6.0",
-    "@unocss/reset": "^0.58.6",
+    "@astrojs/check": "^0.5.10",
+    "@astrojs/mdx": "^2.2.2",
+    "@astrojs/react": "^3.1.0",
+    "@astrojs/vue": "^4.0.9",
+    "@backmoji/react": "workspace:*",
+    "@backmoji/vue": "workspace:*",
+    "@types/react": "^18.2.73",
+    "@types/react-dom": "^18.2.23",
     "ahooks": "^3.7.10",
-    "clsx": "^2.1.0",
+    "astro": "^4.5.12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "stats.js": "^0.17.0"
+    "stats.js": "^0.17.0",
+    "typescript": "^5.4.3",
+    "vue": "^3.4.21"
   },
   "devDependencies": {
     "@iconify/json": "^2.2.196",
-    "@mdx-js/rollup": "^3.0.1",
-    "@types/mdx": "^2.0.12",
-    "@types/react": "^18.2.66",
-    "@types/react-dom": "^18.2.22",
+    "@shikijs/twoslash": "^1.2.1",
     "@types/stats.js": "^0.17.3",
-    "@typescript-eslint/eslint-plugin": "^7.2.0",
-    "@typescript-eslint/parser": "^7.2.0",
-    "@vitejs/plugin-react-swc": "^3.5.0",
-    "eslint": "^8.57.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.6",
-    "shiki": "^1.2.1",
-    "typescript": "^5.2.2",
-    "unocss": "^0.58.6",
-    "vite": "^5.2.0"
+    "@unocss/reset": "^0.58.8",
+    "unocss": "^0.58.8"
   }
 }

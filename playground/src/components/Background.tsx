@@ -1,26 +1,15 @@
-import "./App.css";
-import { useEffect, useRef } from "react";
 import { useBackmoji, useImageLoader, useImageRenderer, useTextRenderer } from "@backmoji/react";
 import { useEventListener } from "ahooks";
-import type { MDXComponents } from "mdx/types";
-import Paw from "./assets/paw.svg";
-import { animate } from "./animation";
-import { Badge } from "./components/Badge";
-import { Code } from "./components/Code";
-import Example from "./example.mdx";
-
-const components: MDXComponents = {
-  code: ({ children }) => {
-    return <code>{children}</code>;
-  },
-};
+import { useEffect, useRef } from "react";
+import { animate } from "../utils/animation";
+import Paw from "/paw.svg?url";
 
 const { play, setCallback, getTimestamp, reset } = animate({
   speed: 0.3,
 });
 
-function App() {
-  const backgroundRef = useRef<HTMLDivElement>(null);
+export function Background() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const _textRenderer = useTextRenderer("🤣", {
     font: "60px Arial",
@@ -71,7 +60,8 @@ function App() {
       }
     },
   });
-  const { getSize, setSize, render, canvas, ctx } = useBackmoji(imageRenderer, {
+
+  const { canvas, render, getSize, ctx, setSize } = useBackmoji(imageRenderer, canvasRef, {
     degree: -30,
     rowGap: 40,
     columnGap: 20,
@@ -101,13 +91,10 @@ function App() {
 
   useEffect(() => {
     if (canvas) {
-      if (backgroundRef.current) {
-        backgroundRef.current.appendChild(canvas);
-        setCanvasStyle(canvas);
-        setSize?.(window.innerWidth, window.innerHeight);
-        render?.();
-        play();
-      }
+      setCanvasStyle(canvas);
+      setSize?.(window.innerWidth, window.innerHeight);
+      render?.();
+      play();
 
       return () => {
         reset();
@@ -116,24 +103,5 @@ function App() {
     }
   }, [canvas]);
 
-  return (
-    <div ref={backgroundRef} className="m-4 max-w-3xl w-full">
-      <section className="h-screen flex flex-col items-center justify-center">
-        <h1 className="h1">
-          Backmoji
-        </h1>
-        <div className="mt-2 flex gap-3">
-          <Badge type="npm"></Badge>
-          <Badge type="github"></Badge>
-        </div>
-      </section>
-      <section>
-        <h2 className="h2">Install</h2>
-        <Code lang="sh">npm install backmoji</Code>
-        <Example components={components}></Example>
-      </section>
-    </div>
-  );
+  return <canvas ref={canvasRef}></canvas>;
 }
-
-export default App;
