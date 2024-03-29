@@ -2,8 +2,18 @@ import "./App.css";
 import { useEffect, useRef } from "react";
 import { useBackmoji, useImageLoader, useImageRenderer, useTextRenderer } from "@backmoji/react";
 import { useEventListener } from "ahooks";
+import type { MDXComponents } from "mdx/types";
 import Paw from "./assets/paw.svg";
 import { animate } from "./animation";
+import { Badge } from "./components/Badge";
+import { Code } from "./components/Code";
+import Example from "./example.mdx";
+
+const components: MDXComponents = {
+  code: ({ children }) => {
+    return <code>{children}</code>;
+  },
+};
 
 const { play, setCallback, getTimestamp, reset } = animate({
   speed: 0.3,
@@ -107,11 +117,20 @@ function App() {
   }, [canvas]);
 
   return (
-    <div ref={backgroundRef}>
-      <section className="h-screen flex items-center justify-center">
-        <h1 className="font-bold font-italic text-7xl md:text-8xl lg:text-9xl text-orange-500">
+    <div ref={backgroundRef} className="m-4 max-w-3xl w-full">
+      <section className="h-screen flex flex-col items-center justify-center">
+        <h1 className="h1">
           Backmoji
         </h1>
+        <div className="mt-2 flex gap-3">
+          <Badge type="npm"></Badge>
+          <Badge type="github"></Badge>
+        </div>
+      </section>
+      <section>
+        <h2 className="h2">Install</h2>
+        <Code lang="sh">npm install backmoji</Code>
+        <Example components={components}></Example>
       </section>
     </div>
   );
