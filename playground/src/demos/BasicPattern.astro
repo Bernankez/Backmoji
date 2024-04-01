@@ -1,12 +1,12 @@
-<div id="basic-pattern" class="h-full w-full overflow-hidden rounded-md bg-orange-50"></div>
+<div id="demo-basic-pattern" class="h-full w-full overflow-hidden rounded-md bg-orange-50"></div>
 
 <script>
 import { backmoji, createTextRenderer } from "backmoji";
 
-const parent = document.querySelector<HTMLDivElement>("#basic-pattern")!;
+const parent = document.querySelector<HTMLDivElement>("#demo-basic-pattern")!;
 
 const renderer = createTextRenderer("😯", {
-  font: "5rem Aria",
+  font: "40px Aria",
 });
 const height = 160;
 const { canvas, render, setSize } = backmoji(renderer, {

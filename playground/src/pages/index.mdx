@@ -30,10 +30,10 @@ import BasicPattern from "@/demos/BasicPattern.astro";
 ```ts
 import { backmoji, createTextRenderer } from "backmoji";
 
-const parent = document.querySelector<HTMLDivElement>("#basic-pattern")!;
+const parent = document.querySelector<HTMLDivElement>("#demo-basic-pattern")!;
 
 const renderer = createTextRenderer("😯", {
-  font: "5rem Aria",
+  font: "40px Aria",
 });
 const height = 160;
 const { canvas, render, setSize } = backmoji(renderer, {
@@ -66,7 +66,7 @@ import ImagePattern from "@/demos/ImagePattern.astro";
 import { backmoji, createImageRenderer } from "backmoji";
 import Avatar from "/avatar.png";
 
-const parent = document.querySelector<HTMLDivElement>("#image-pattern")!;
+const parent = document.querySelector<HTMLDivElement>("#demo-image-pattern")!;
 
 function loadImage() {
   return new Promise<HTMLImageElement>((resolve) => {

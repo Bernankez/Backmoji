@@ -1,10 +1,10 @@
-<div id="image-pattern" class="h-full w-full overflow-hidden rounded-md bg-orange-50"></div>
+<div id="demo-image-pattern" class="h-full w-full overflow-hidden rounded-md bg-orange-50"></div>
 
 <script>
 import { backmoji, createImageRenderer } from "backmoji";
 import Avatar from '/avatar.png?url'
 
-const parent = document.querySelector<HTMLDivElement>("#image-pattern")!;
+const parent = document.querySelector<HTMLDivElement>("#demo-image-pattern")!;
 
 function loadImage() {
   return new Promise<HTMLImageElement>(resolve => {
