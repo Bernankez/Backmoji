@@ -21,109 +21,17 @@ render();
 
 ## Examples
 
-### The Basic pattern
+### Basic pattern
 
 import BasicPattern from "@/demos/BasicPattern.astro";
 
 <BasicPattern />
-
-```ts
-import { backmoji, createTextRenderer } from "backmoji";
-
-const parent = document.querySelector<HTMLDivElement>("#basic-pattern")!;
-
-const renderer = createTextRenderer("😯", {
-  font: "5rem Aria",
-});
-const height = 160;
-const { canvas, render, setSize } = backmoji(renderer, {
-  degree: 30,
-  rowGap: 30,
-  columnGap: 40,
-  width: parent.clientWidth,
-  height,
-});
-
-const observer = new ResizeObserver((entries) => {
-  for (const entry of entries) {
-    setSize(entry.contentRect.width, height);
-    render();
-  }
-});
-observer.observe(parent);
-
-parent.appendChild(canvas);
-render();
-```
 
 ### Render an image with custom render function
 
 import ImagePattern from "@/demos/ImagePattern.astro";
 
 <ImagePattern />
-
-```ts
-import { backmoji, createImageRenderer } from "backmoji";
-import Avatar from "/avatar.png";
-
-const parent = document.querySelector<HTMLDivElement>("#image-pattern")!;
-
-function loadImage() {
-  return new Promise<HTMLImageElement>((resolve) => {
-    const image = document.createElement("img");
-    image.onload = () => {
-      resolve(image);
-    };
-    image.src = Avatar;
-    image.width = 200;
-    image.height = 200;
-  });
-}
-
-const img = await loadImage();
-
-const renderer = createImageRenderer(img, {
-  custom({ ctx, item, renderItemWidth, renderItemHeight, rowGap, columnGap, columnCount, rowCount }) {
-    for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-      let from: number, to: number;
-      if (rowIndex % 2 === 0) {
-        from = -2;
-        to = columnCount;
-      } else {
-        from = 0;
-        to = columnCount + 2;
-      }
-      for (let columnIndex = from; columnIndex < to; columnIndex++) {
-        const x = columnIndex * (renderItemWidth + columnGap);
-        const y = rowIndex * (renderItemHeight + rowGap);
-        if ((columnIndex - rowIndex) % 2 === 0) {
-          ctx.drawImage(item, x, y, renderItemWidth, renderItemHeight);
-        }
-      }
-    }
-  },
-});
-
-const height = 300;
-const { canvas, render, setSize } = backmoji(renderer, {
-  degree: -30,
-  rowGap: 50,
-  columnGap: 60,
-  width: parent.clientWidth,
-  height,
-});
-
-const observer = new ResizeObserver((entries) => {
-  for (const entry of entries) {
-    setSize(entry.contentRect.width, height);
-    render();
-  }
-});
-observer.observe(parent);
-
-parent.appendChild(canvas);
-render();
-```
 
 ### Render with animation
 
