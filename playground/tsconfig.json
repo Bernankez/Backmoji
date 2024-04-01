@@ -11,5 +11,5 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false
   },
-  "exclude": ["dist"]
+  "exclude": ["dist", "public"]
 }
