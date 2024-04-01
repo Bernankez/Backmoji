@@ -20,7 +20,7 @@
     "clean": "rimraf --glob packages/*/{dist}",
     "play": "pnpm -F \"./playground\" dev",
     "play:build": "pnpm -F \"./playground\" build",
-    "dev": "pnpm -F \"./packages/core\" dev && pnpm play",
+    "dev": "pnpm -r -F \"./packages/*\" dev && pnpm play",
     "build": "pnpm clean && pnpm -r -F \"./packages/*\" build && pnpm play:build",
     "release": "bumpp -r",
     "test": "vitest run",

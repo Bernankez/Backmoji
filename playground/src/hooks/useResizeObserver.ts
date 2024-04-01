@@ -1,5 +1,5 @@
 import { useLatest } from "ahooks";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 export function useResizeObserver<T extends HTMLElement>(
   callback: ResizeObserverCallback,

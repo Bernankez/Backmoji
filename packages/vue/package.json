@@ -48,5 +48,14 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "peerDependencies": {
+    "vue": ">=3.4.0"
+  },
+  "dependencies": {
+    "backmoji": "workspace:*"
+  },
+  "devDependencies": {
+    "vue": "3.4.0"
   }
 }
