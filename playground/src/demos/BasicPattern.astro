@@ -1,45 +1,12 @@
----
-import Demo from "@/components/Demo.astro";
-
-const code = `import { backmoji, createTextRenderer } from "backmoji";
-
-const parent = document.querySelector<HTMLDivElement>("#the-basic-pattern")!;
-
-const renderer = createTextRenderer("😯", {
-  font: "50px Aria",
-});
-const height = 160;
-const { canvas, render, setSize } = backmoji(renderer, {
-  degree: 30,
-  rowGap: 30,
-  columnGap: 40,
-  width: parent.clientWidth,
-  height,
-});
-
-const observer = new ResizeObserver((entries) => {
-  for (const entry of entries) {
-    setSize(entry.contentRect.width, height);
-    render();
-  }
-});
-observer.observe(parent);
-
-parent.appendChild(canvas);
-render();`;
----
-
-<Demo code={code} lang="ts">
-  <div id="the-basic-pattern" class="h-full w-full overflow-hidden rounded-md bg-orange-50"></div>
-</Demo>
+<div id="basic-pattern" class="h-full w-full overflow-hidden rounded-md bg-orange-50"></div>
 
 <script>
 import { backmoji, createTextRenderer } from "backmoji";
 
-const parent = document.querySelector<HTMLDivElement>("#the-basic-pattern")!;
+const parent = document.querySelector<HTMLDivElement>("#basic-pattern")!;
 
 const renderer = createTextRenderer("😯", {
-  font: "50px Aria",
+  font: "5rem Aria",
 });
 const height = 160;
 const { canvas, render, setSize } = backmoji(renderer, {
