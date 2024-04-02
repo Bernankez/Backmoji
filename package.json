@@ -1,7 +1,7 @@
 {
   "name": "@backmoji/monorepo",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "packageManager": "pnpm@8.15.5",
   "description": "Flow wallpaper creator.",
@@ -22,7 +22,7 @@
     "play:build": "pnpm -F \"./playground\" build",
     "dev": "pnpm -r -F \"./packages/*\" dev && pnpm play",
     "build": "pnpm clean && pnpm -r -F \"./packages/*\" build && pnpm play:build",
-    "release": "bumpp -r",
+    "release": "bumpp -r && pnpm publish -r",
     "test": "vitest run",
     "test:watch": "vitest",
     "coverage": "vitest run --coverage",
