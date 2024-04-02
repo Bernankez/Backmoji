@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref, watchEffect } from "vue";
-import { useBackmoji, useTextRenderer } from "@backmoji/vue";
+import { useBackmoji, useImageLoader, useImageRenderer, useTextRenderer } from "@backmoji/vue";
 import VueLogo from "/vue.svg?url";
 
 const canvasRef = ref<HTMLCanvasElement>();
-const renderer = useTextRenderer("vue");
+const image = useImageLoader(VueLogo);
+const renderer = useImageRenderer(image);
 const backmojiResult = useBackmoji(renderer, canvasRef, {
   rowGap: 30,
   columnGap: 30,

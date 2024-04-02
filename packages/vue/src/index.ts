@@ -1,5 +1,5 @@
-import { type BackmojiOptions, type CreateTextRendererOptions, type Renderer, backmoji, createTextRenderer } from "backmoji";
-import { type ComputedRef, type MaybeRefOrGetter, computed, toValue } from "vue";
+import { type BackmojiOptions, type CreateImageRendererOptions, type CreateTextRendererOptions, type Renderer, backmoji, createImageRenderer, createTextRenderer } from "backmoji";
+import { type ComputedRef, type MaybeRefOrGetter, computed, onMounted, ref, toValue } from "vue";
 
 export type BackmojiResult = ReturnType<typeof backmoji>;
 
@@ -23,5 +23,31 @@ export function useTextRenderer(text: MaybeRefOrGetter<string>, options?: MaybeR
     const _text = toValue(text);
     const _options = toValue(options);
     return createTextRenderer(_text, _options);
+  });
+}
+
+export function useImageLoader(src: MaybeRefOrGetter<string>) {
+  const img = ref();
+
+  const load = async () => {
+    const _src = toValue(src);
+    const _img = new Image();
+    _img.src = _src;
+    await new Promise((resolve) => {
+      _img.onload = resolve;
+    });
+    img.value = _img;
+  };
+
+  onMounted(load);
+
+  return img;
+}
+
+export function useImageRenderer(image: MaybeRefOrGetter<HTMLImageElement | undefined>, options?: MaybeRefOrGetter<CreateImageRendererOptions | undefined>) {
+  return computed(() => {
+    const _image = toValue(image);
+    const _options = toValue(options);
+    return createImageRenderer(_image, _options);
   });
 }
