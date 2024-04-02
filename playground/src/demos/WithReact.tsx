@@ -35,7 +35,7 @@ export function WithReact() {
   }, [canvas]);
 
   return (
-    <div ref={divRef}>
+    <div ref={divRef} className="rounded-md bg-orange-50">
       <canvas ref={canvasRef}></canvas>
     </div>
   );

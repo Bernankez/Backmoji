@@ -3,12 +3,12 @@ import { type ComputedRef, type MaybeRefOrGetter, computed, onMounted, ref, toVa
 
 export type BackmojiResult = ReturnType<typeof backmoji>;
 
-export function useBackmoji(renderer: MaybeRefOrGetter<Renderer>, canvas: MaybeRefOrGetter<HTMLCanvasElement | undefined>, options?: MaybeRefOrGetter<Omit<BackmojiOptions, "canvas"> | undefined>) {
+export function useBackmoji(renderer: MaybeRefOrGetter<Renderer | undefined>, canvas: MaybeRefOrGetter<HTMLCanvasElement | undefined>, options?: MaybeRefOrGetter<Omit<BackmojiOptions, "canvas"> | undefined>) {
   return computed(() => {
     const _renderer = toValue(renderer);
     const _options = toValue(options);
     const _canvas = toValue(canvas);
-    if (!_canvas) {
+    if (!_canvas || !_renderer) {
       return undefined;
     }
     return backmoji(_renderer, {
@@ -48,6 +48,9 @@ export function useImageRenderer(image: MaybeRefOrGetter<HTMLImageElement | unde
   return computed(() => {
     const _image = toValue(image);
     const _options = toValue(options);
+    if (!_image) {
+      return undefined;
+    }
     return createImageRenderer(_image, _options);
   });
 }
