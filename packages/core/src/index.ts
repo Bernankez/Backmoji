@@ -1,4 +1,4 @@
-import { makeDestructurable } from "@bernankez/utils";
+import type { Awaitable } from "@bernankez/utils";
 import { assert } from "./utils";
 import { calculateRenderCount, calculateTranslate, measureText } from "./utils/shared";
 import { degreeToAngle } from "./utils/math";
@@ -8,7 +8,6 @@ export * from "./utils/shared";
 export * from "./utils/math";
 
 export interface BackmojiOptions {
-  canvas?: HTMLCanvasElement;
   width?: number;
   height?: number;
   degree?: number;
@@ -32,51 +31,19 @@ export interface RendererContext {
 
 export type Renderer = (context: RendererContext) => void;
 
-export function backmoji(renderer: Renderer, options?: BackmojiOptions) {
-  const { width = 300, height = 150, degree = 0, rowGap = 0, columnGap = 0, canvas = document.createElement("canvas") } = options || {};
+export function backmoji(canvas: Awaitable<HTMLCanvasElement>, renderer: Awaitable<Renderer>, options?: BackmojiOptions) {
+  let _options: BackmojiOptions = options || {};
 
-  const ctx = canvas.getContext("2d")!;
-  assert(ctx, "Current environment does not support 2d canvas rendering");
-
-  setSize(width, height);
-
-  function getSize() {
-    const w = canvas.width;
-    const h = canvas.height;
-    return makeDestructurable({
-      w,
-      h,
-    }, [w, h]);
-  }
-
-  function setSize(w: number | undefined | null, h: number | undefined | null) {
-    const [width, height] = getSize();
-    w = w ?? width;
-    h = h ?? height;
-    const ratio = window.devicePixelRatio;
-    canvas.style.width = `${w}px`;
-    canvas.style.height = `${h}px`;
-    canvas.width = w * ratio;
-    canvas.height = h * ratio;
-  }
-
-  function saveImageData() {
-    const [width, height] = getSize();
-    const imageData = ctx.getImageData(0, 0, width, height);
-
-    return () => {
-      ctx.putImageData(imageData, 0, 0);
-    };
-  }
-
-  function createRendererContext(): RendererContext {
+  async function createRendererContext() {
+    const _canvas = await canvas;
+    const ctx = _canvas.getContext("2d");
+    assert(ctx, "Current environment does not support 2d canvas rendering");
+    const { width = 300, height = 150, degree = 0, rowGap = 0, columnGap = 0 } = _options || {};
     let _degree = degree % 360;
     if (_degree < 0) {
       _degree = 360 + _degree;
     }
-
     const _measureText: RendererContext["measureText"] = text => measureText(ctx, text);
-    const [width, height] = getSize();
     const _calculateRenderCount: RendererContext["calculateRenderCount"] = (renderItemWidth, renderItemHeight) => calculateRenderCount({
       width,
       height,
@@ -103,19 +70,23 @@ export function backmoji(renderer: Renderer, options?: BackmojiOptions) {
     };
   }
 
-  function render() {
-    const context = createRendererContext();
-    renderer(context);
+  async function render() {
+    const _renderer = await renderer;
+    const context = await createRendererContext();
+    _renderer(context);
+  }
+
+  function setOptions(options: BackmojiOptions, combine = true) {
+    if (combine) {
+      Object.assign(_options, options);
+    } else {
+      _options = options;
+    }
   }
 
   return {
-    canvas,
-    ctx,
-
     render,
-    setSize,
-    getSize,
 
-    saveImageData,
+    setOptions,
   };
 }
