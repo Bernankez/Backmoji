@@ -8,8 +8,6 @@ export * from "./utils/shared";
 export * from "./utils/math";
 
 export interface BackmojiOptions {
-  width?: number;
-  height?: number;
   degree?: number;
   rowGap?: number;
   columnGap?: number;
@@ -38,7 +36,9 @@ export function backmoji(canvas: Awaitable<HTMLCanvasElement>, renderer: Awaitab
     const _canvas = await canvas;
     const ctx = _canvas.getContext("2d");
     assert(ctx, "Current environment does not support 2d canvas rendering");
-    const { width = 300, height = 150, degree = 0, rowGap = 0, columnGap = 0 } = _options || {};
+    const { degree = 0, rowGap = 0, columnGap = 0 } = _options || {};
+    const width = _canvas.width;
+    const height = _canvas.height;
     let _degree = degree % 360;
     if (_degree < 0) {
       _degree = 360 + _degree;
@@ -84,9 +84,21 @@ export function backmoji(canvas: Awaitable<HTMLCanvasElement>, renderer: Awaitab
     }
   }
 
+  async function setSize(width: number | undefined, height: number | undefined) {
+    const _canvas = await canvas;
+    const ratio = window.devicePixelRatio;
+    const w = width || _canvas.width;
+    const h = height || _canvas.height;
+    _canvas.width = w * ratio;
+    _canvas.height = h * ratio;
+    _canvas.style.width = `${w}px`;
+    _canvas.style.height = `${h}px`;
+  }
+
   return {
     render,
 
     setOptions,
+    setSize,
   };
 }

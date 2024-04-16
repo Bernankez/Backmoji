@@ -1,39 +1,44 @@
-import { type BackmojiOptions, type CreateImageRendererOptions, type CreateTextRendererOptions, type Renderer, backmoji, createImageRenderer, createTextRenderer } from "backmoji";
+import type { BackmojiOptions, CreateImageRendererOptions, CreateTextRendererOptions, Renderer } from "backmoji";
+import { backmoji, createImageRenderer, createTextRenderer } from "backmoji";
 import { type RefObject, useEffect, useMemo, useState } from "react";
 
 export type BackmojiResult = ReturnType<typeof backmoji>;
 
-export function useBackmoji(renderer: Renderer | null, canvas: RefObject<HTMLCanvasElement>, options?: Omit<BackmojiOptions, "canvas">, deps?: any[]) {
-  const [backmojiResult, setBackmojiResult] = useState<Partial<BackmojiResult>>({});
+export function useBackmoji(canvas: RefObject<HTMLCanvasElement> | HTMLCanvasElement, renderer: Renderer | undefined, options?: BackmojiOptions, deps?: any[]) {
+  const [backmojiResult, setBackmojiResult] = useState<BackmojiResult>({
+    render: async () => {},
+    setOptions: () => {},
+    setSize: async () => {},
+  });
 
   useEffect(() => {
-    if (!renderer || !canvas.current) {
+    let _canvas: HTMLCanvasElement | null;
+    if ("current" in canvas) {
+      _canvas = canvas.current;
+    } else {
+      _canvas = canvas;
+    }
+    if (!_canvas || !renderer) {
       return;
     }
 
-    setBackmojiResult(backmoji(renderer, { ...options, canvas: canvas.current }));
+    setBackmojiResult(backmoji(_canvas, renderer, options));
 
     return () => {
-      if (backmojiResult?.canvas) {
-        backmojiResult.canvas.remove();
-      }
+      _canvas?.remove();
     };
-  }, [renderer, canvas, ...(deps || [])]);
+  }, [canvas, renderer, ...(deps || [])]);
 
   return backmojiResult;
 }
 
-export function useImageLoader(img: HTMLImageElement | string) {
-  const [image, setImage] = useState<HTMLImageElement | null>(null);
+export function useImageLoader(img: string) {
+  const [image, setImage] = useState<HTMLImageElement>();
 
   useEffect(() => {
-    if (typeof img === "string") {
-      loadImage(img).then((image) => {
-        setImage(image);
-      });
-    } else {
-      setImage(img);
-    }
+    loadImage(img).then((image) => {
+      setImage(image);
+    });
   }, [img]);
 
   function loadImage(img: string) {
@@ -49,12 +54,11 @@ export function useImageLoader(img: HTMLImageElement | string) {
   return image;
 }
 
-export function useImageRenderer(img: HTMLImageElement | null, options?: CreateImageRendererOptions) {
+export function useImageRenderer(img: HTMLImageElement | undefined, options?: CreateImageRendererOptions) {
   const renderer = useMemo(() => {
     if (img) {
       return createImageRenderer(img, options);
     }
-    return null;
   }, [img]);
 
   return renderer;
