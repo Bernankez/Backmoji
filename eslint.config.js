@@ -5,4 +5,9 @@ export default bernankez({
   astro: true,
   formatters: true,
   vue: true,
+  javascript: {
+    overrides: {
+      "no-async-promise-executor": "off",
+    },
+  },
 });
