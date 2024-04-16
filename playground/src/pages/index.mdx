@@ -15,7 +15,7 @@ import { backmoji, createTextRenderer } from "backmoji";
 
 const canvas = document.createElement("canvas");
 const renderer = createTextRenderer("👌");
-const { render } = backmoji(renderer);
+const { render } = backmoji(canvas, renderer);
 render();
 ```
 
@@ -31,18 +31,19 @@ import BasicPattern from "@/demos/BasicPattern.astro";
 import { backmoji, createTextRenderer } from "backmoji";
 
 const parent = document.querySelector<HTMLDivElement>("#demo-basic-pattern")!;
+const canvas = document.createElement("canvas");
 
 const renderer = createTextRenderer("😯", {
   font: "40px Aria",
 });
 const height = 160;
-const { canvas, render, setSize } = backmoji(renderer, {
+const { render, setSize } = backmoji(canvas, renderer, {
   degree: 30,
   rowGap: 30,
   columnGap: 40,
-  width: parent.clientWidth,
-  height,
 });
+
+setSize(parent.clientWidth, height);
 
 const observer = new ResizeObserver((entries) => {
   for (const entry of entries) {
@@ -63,9 +64,10 @@ import ImagePattern from "@/demos/ImagePattern.astro";
 <ImagePattern />
 
 ```ts
-import { backmoji, createImageRenderer } from "backmoji";
-import Avatar from "/avatar.png";
+import { type Renderer, backmoji, createImageRenderer } from "backmoji";
+import Avatar from "/avatar.png?url";
 
+const canvas = document.createElement("canvas");
 const parent = document.querySelector<HTMLDivElement>("#demo-image-pattern")!;
 
 function loadImage() {
@@ -80,37 +82,40 @@ function loadImage() {
   });
 }
 
-const img = await loadImage();
-
-const renderer = createImageRenderer(img, {
-  custom({ ctx, item, renderItemWidth, renderItemHeight, rowGap, columnGap, columnCount, rowCount }) {
-    for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-      let from: number, to: number;
-      if (rowIndex % 2 === 0) {
-        from = -2;
-        to = columnCount;
-      } else {
-        from = 0;
-        to = columnCount + 2;
-      }
-      for (let columnIndex = from; columnIndex < to; columnIndex++) {
-        const x = columnIndex * (renderItemWidth + columnGap);
-        const y = rowIndex * (renderItemHeight + rowGap);
-        if ((columnIndex - rowIndex) % 2 === 0) {
-          ctx.drawImage(item, x, y, renderItemWidth, renderItemHeight);
+function createRenderer() {
+  return new Promise<Renderer>(async (resolve) => {
+    const img = await loadImage();
+    const renderer = createImageRenderer(img, {
+      custom({ ctx, item, renderItemWidth, renderItemHeight, rowGap, columnGap, columnCount, rowCount }) {
+        for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+          let from: number, to: number;
+          if (rowIndex % 2 === 0) {
+            from = -2;
+            to = columnCount;
+          } else {
+            from = 0;
+            to = columnCount + 2;
+          }
+          for (let columnIndex = from; columnIndex < to; columnIndex++) {
+            const x = columnIndex * (renderItemWidth + columnGap);
+            const y = rowIndex * (renderItemHeight + rowGap);
+            if ((columnIndex - rowIndex) % 2 === 0) {
+              ctx.drawImage(item, x, y, renderItemWidth, renderItemHeight);
+            }
+          }
         }
-      }
-    }
-  },
-});
+      },
+    });
+    resolve(renderer);
+  });
+}
 
 const height = 300;
-const { canvas, render, setSize } = backmoji(renderer, {
+const renderer = createRenderer();
+const { render, setSize } = backmoji(canvas, renderer, {
   degree: -30,
   rowGap: 50,
   columnGap: 60,
-  width: parent.clientWidth,
-  height,
 });
 
 const observer = new ResizeObserver((entries) => {

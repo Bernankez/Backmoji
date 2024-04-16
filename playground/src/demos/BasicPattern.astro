@@ -4,26 +4,27 @@
 import { backmoji, createTextRenderer } from "backmoji";
 
 const parent = document.querySelector<HTMLDivElement>("#demo-basic-pattern")!;
+const canvas = document.createElement("canvas");
 
 const renderer = createTextRenderer("😯", {
   font: "40px Aria",
 });
 const height = 160;
-const { canvas, render, setSize } = backmoji(renderer, {
+const { render, setSize } = backmoji(canvas, renderer, {
   degree: 30,
   rowGap: 30,
   columnGap: 40,
-  width: parent.clientWidth,
-  height,
 });
 
+setSize(parent.clientWidth, height);
+
 const observer = new ResizeObserver((entries) => {
-  for(const entry of entries){
+  for (const entry of entries) {
     setSize(entry.contentRect.width, height);
     render();
   }
-})
-observer.observe(parent)
+});
+observer.observe(parent);
 
 parent.appendChild(canvas);
 render();

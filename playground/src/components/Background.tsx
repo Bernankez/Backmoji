@@ -61,15 +61,26 @@ export function Background() {
     },
   });
 
-  const { canvas, render, getSize, ctx, setSize } = useBackmoji(imageRenderer, canvasRef, {
+  const { render, setSize } = useBackmoji(canvasRef, imageRenderer, {
     degree: -30,
     rowGap: 40,
     columnGap: 20,
   });
 
+  function getSize() {
+    if (canvasRef.current) {
+      return {
+        w: canvasRef.current?.width,
+        h: canvasRef.current?.height,
+      };
+    }
+  }
+
   function animationCb() {
-    if (getSize && ctx) {
-      const { w, h } = getSize();
+    const ctx = canvasRef.current?.getContext("2d");
+    const size = getSize();
+    if (size && ctx) {
+      const { w, h } = size;
       ctx?.clearRect(0, 0, w, h);
       render?.();
     }
@@ -77,7 +88,7 @@ export function Background() {
   setCallback(animationCb);
 
   useEventListener("resize", () => {
-    setSize?.(window.innerWidth, window.innerHeight);
+    setSize(window.innerWidth, window.innerHeight);
     animationCb();
   });
 
@@ -90,18 +101,22 @@ export function Background() {
   }
 
   useEffect(() => {
-    if (canvas) {
-      setCanvasStyle(canvas);
-      setSize?.(window.innerWidth, window.innerHeight);
-      render?.();
-      play();
-
-      return () => {
-        reset();
-        canvas.remove();
-      };
+    if (!canvasRef.current) {
+      return;
     }
-  }, [canvas]);
+    setCanvasStyle(canvasRef.current);
+    play();
+
+    return () => {
+      reset();
+      canvasRef.current?.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    setSize(window.innerWidth, window.innerHeight);
+    render();
+  }, [render, setSize]);
 
   return <canvas ref={canvasRef}></canvas>;
 }

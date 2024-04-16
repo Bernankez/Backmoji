@@ -1,38 +1,37 @@
 import { useBackmoji, useImageLoader, useImageRenderer } from "@backmoji/react";
 import ReactLogo from "/react.svg?url";
-import { useEffect, useRef } from "react";
-import { useLatest } from "ahooks";
+import { useEffect, useRef, useState } from "react";
 import { useResizeObserver } from "../hooks/useResizeObserver";
 
 export function WithReact() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const img = useImageLoader(ReactLogo);
   const renderer = useImageRenderer(img);
-  const backmojiResult = useBackmoji(renderer, canvasRef, {
-    height: 150,
+  const { render, setSize } = useBackmoji(canvasRef, renderer, {
     rowGap: 15,
     columnGap: 30,
   });
-  const { render, canvas, setSize } = useLatest(backmojiResult).current;
   const divRef = useResizeObserver<HTMLDivElement>((entries) => {
     for (const entry of entries) {
       const { width, height } = entry.contentRect;
-      setSize?.(width, height);
-      render?.();
+      setSize(width, height);
+      render();
     }
   });
 
   useEffect(() => {
-    if (canvas) {
-      setSize?.(divRef.current?.clientWidth, divRef.current?.clientHeight);
-      render?.();
-
-      return () => {
-        canvas.remove();
-      };
+    if (mounted) {
+      const div = divRef.current!;
+      setSize(div.clientWidth, 150);
+      render();
     }
-  }, [canvas]);
+  }, [mounted, render, setSize]);
 
   return (
     <div ref={divRef} className="rounded-md bg-orange-50">
