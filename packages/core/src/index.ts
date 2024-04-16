@@ -1,3 +1,4 @@
+// TODO fix https://github.com/Bernankez/utils/issues/11
 import type { Awaitable } from "@bernankez/utils";
 import { assert } from "./utils";
 import { calculateRenderCount, calculateTranslate, measureText } from "./utils/shared";
