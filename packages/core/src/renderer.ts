@@ -19,7 +19,7 @@ export interface RenderContext<T> {
 
 export interface CreateTextRendererOptions {
   font?: string;
-  custom?: (context: RenderContext<string>) => void;
+  customRender?: (context: RenderContext<string>) => void;
 }
 
 export function textRender(context: RenderContext<string>) {
@@ -34,8 +34,8 @@ export function textRender(context: RenderContext<string>) {
 }
 
 export function createTextRenderer(text: string, options?: CreateTextRendererOptions) {
-  const { font, custom } = options || {};
-  const render = custom ?? textRender;
+  const { font, customRender } = options || {};
+  const render = customRender ?? textRender;
   const renderer: Renderer = (context) => {
     const { ctx, rowGap, columnGap, measureText, degree, angle, calculateRenderCount, calculateTranslate, width, height } = context;
     if (font) {
@@ -72,7 +72,7 @@ export function createTextRenderer(text: string, options?: CreateTextRendererOpt
 }
 
 export interface CreateImageRendererOptions {
-  custom?: (context: RenderContext<HTMLImageElement>) => void;
+  customRender?: (context: RenderContext<HTMLImageElement>) => void;
 }
 
 export function imageRender(context: RenderContext<HTMLImageElement>) {
@@ -87,8 +87,8 @@ export function imageRender(context: RenderContext<HTMLImageElement>) {
 }
 
 export function createImageRenderer(img: HTMLImageElement, options?: CreateImageRendererOptions) {
-  const { custom } = options || {};
-  const render = custom ?? imageRender;
+  const { customRender } = options || {};
+  const render = customRender ?? imageRender;
   const renderer: Renderer = (context) => {
     const { ctx, angle, width, height, rowGap, columnGap, degree, calculateTranslate, calculateRenderCount } = context;
     const { x, y } = calculateTranslate();

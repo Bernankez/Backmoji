@@ -86,7 +86,7 @@ function createRenderer() {
   return new Promise<Renderer>(async (resolve) => {
     const img = await loadImage();
     const renderer = createImageRenderer(img, {
-      custom({ ctx, item, renderItemWidth, renderItemHeight, rowGap, columnGap, columnCount, rowCount }) {
+      customRender({ ctx, item, renderItemWidth, renderItemHeight, rowGap, columnGap, columnCount, rowCount }) {
         for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
           let from: number, to: number;
           if (rowIndex % 2 === 0) {

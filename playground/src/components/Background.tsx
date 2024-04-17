@@ -11,9 +11,9 @@ const { play, setCallback, getTimestamp, reset } = animate({
 export function Background() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const _textRenderer = useTextRenderer("🤣", {
+  const _textRenderer = useTextRenderer("👌", {
     font: "60px Arial",
-    custom({ ctx, item, renderItemWidth, renderItemHeight, rowGap, columnGap, columnCount, rowCount }) {
+    customRender({ ctx, item, renderItemWidth, renderItemHeight, rowGap, columnGap, columnCount, rowCount }) {
       for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
         let from: number, to: number;
         if (rowIndex % 2 === 0) {
@@ -38,7 +38,7 @@ export function Background() {
 
   const img = useImageLoader(Paw);
   const imageRenderer = useImageRenderer(img, {
-    custom({ ctx, item, renderItemWidth, renderItemHeight, rowGap, columnGap, columnCount, rowCount }) {
+    customRender({ ctx, item, renderItemWidth, renderItemHeight, rowGap, columnGap, columnCount, rowCount }) {
       for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
         let from: number, to: number;
         if (rowIndex % 2 === 0) {
