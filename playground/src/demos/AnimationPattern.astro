@@ -1,0 +1,81 @@
+<div id="demo-animation-pattern" class="relative h-full w-full overflow-hidden rounded-md bg-orange-50"></div>
+
+<script>
+import { backmoji, createImageRenderer } from "backmoji";
+import { animate } from "@/utils/animation";
+import Paw from "/paw.svg?url";
+
+const { play, setCallback, getTimestamp, stat } = animate({
+  speed: 0.3,
+});
+
+const canvas = document.createElement("canvas");
+const parent = document.querySelector<HTMLDivElement>("#demo-animation-pattern")!;
+
+function loadImage(url: string) {
+  const image = new Image();
+  image.src = url;
+  return new Promise<HTMLImageElement>((resolve) => {
+    image.onload = () => resolve(image);
+  });
+}
+
+async function createRenderer() {
+  return createImageRenderer(await loadImage(Paw), {
+    customRender({ ctx, item, renderItemWidth, renderItemHeight, rowGap, columnGap, columnCount, rowCount }) {
+      for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+        let from: number, to: number;
+        if (rowIndex % 2 === 0) {
+          from = -2;
+          to = columnCount;
+        } else {
+          from = 0;
+          to = columnCount + 2;
+        }
+        for (let columnIndex = from; columnIndex < to; columnIndex++) {
+          let offset = getTimestamp();
+          offset = offset % (2 * (renderItemWidth + columnGap));
+          const x = columnIndex * (renderItemWidth + columnGap) + (rowIndex % 2 === 0 ? 1 : -1) * offset;
+          const y = rowIndex * (renderItemHeight + rowGap);
+          if ((columnIndex - rowIndex) % 2 === 0) {
+            ctx.drawImage(item, x, y, renderItemWidth, renderItemHeight);
+          }
+        }
+      }
+    },
+  });
+}
+
+const height = 300;
+const { render, setSize } = backmoji(canvas, createRenderer(), {
+  degree: 30,
+});
+
+function animationCb() {
+  const ctx = canvas.getContext("2d")!;
+  const w = canvas.width;
+  const h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+  render();
+}
+
+setCallback(animationCb);
+
+const observer = new ResizeObserver((entries) => {
+  for (const entry of entries) {
+    setSize(entry.contentRect.width, height);
+    render();
+  }
+});
+observer.observe(parent);
+
+parent.appendChild(canvas);
+const statDom = stat.dom;
+statDom.style.position = "absolute";
+statDom.style.top = "0";
+statDom.style.right = "0";
+statDom.style.left = "unset";
+parent.appendChild(statDom);
+
+play();
+</script>

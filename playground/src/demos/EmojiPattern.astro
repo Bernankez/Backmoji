@@ -1,0 +1,31 @@
+<div id="demo-emoji-pattern" class="h-full w-full overflow-hidden rounded-md bg-orange-50"></div>
+
+<script>
+import { backmoji, createTextRenderer } from "backmoji";
+
+const parent = document.querySelector<HTMLDivElement>("#demo-emoji-pattern")!;
+const canvas = document.createElement("canvas");
+
+const renderer = createTextRenderer("👌", {
+  font: "30px Aria",
+});
+const height = 160;
+const { render, setSize } = backmoji(canvas, renderer, {
+  degree: -45,
+  rowGap: 50,
+  columnGap: 40,
+});
+
+setSize(parent.clientWidth, height);
+
+const observer = new ResizeObserver((entries) => {
+  for (const entry of entries) {
+    setSize(entry.contentRect.width, height);
+    render();
+  }
+});
+observer.observe(parent);
+
+parent.appendChild(canvas);
+render();
+</script>

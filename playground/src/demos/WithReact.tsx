@@ -1,7 +1,6 @@
 import { useBackmoji, useImageLoader, useImageRenderer } from "@backmoji/react";
-import ReactLogo from "/react.svg?url";
 import { useEffect, useRef, useState } from "react";
-import { useResizeObserver } from "../hooks/useResizeObserver";
+import ReactLogo from "/react.svg?url";
 
 export function WithReact() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -13,29 +12,17 @@ export function WithReact() {
 
   const img = useImageLoader(ReactLogo);
   const renderer = useImageRenderer(img);
-  const { render, setSize } = useBackmoji(canvasRef, renderer, {
+  const { render } = useBackmoji(canvasRef, renderer, {
     rowGap: 15,
-    columnGap: 30,
-  });
-  const divRef = useResizeObserver<HTMLDivElement>((entries) => {
-    for (const entry of entries) {
-      const { width, height } = entry.contentRect;
-      setSize(width, height);
-      render();
-    }
+    columnGap: 20,
+    degree: 30,
   });
 
   useEffect(() => {
     if (mounted) {
-      const div = divRef.current!;
-      setSize(div.clientWidth, 150);
       render();
     }
-  }, [mounted, render, setSize]);
+  }, [mounted, render]);
 
-  return (
-    <div ref={divRef} className="rounded-md bg-orange-50">
-      <canvas ref={canvasRef}></canvas>
-    </div>
-  );
+  return <canvas ref={canvasRef}></canvas>;
 }

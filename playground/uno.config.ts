@@ -24,7 +24,8 @@ export default defineConfig({
     }),
   })],
   shortcuts: {
-    h1: "font-bold font-italic text-7xl md:text-8xl lg:text-9xl text-orange-500",
+    h1: "font-italic font-bold text-orange-500 text-7xl md:text-8xl",
     h2: "font-italic font-bold text-orange-500 text-5xl md:text-6xl",
+    h3: "font-italic font-bold text-orange-700 text-xl md:text-2xl",
   },
 });

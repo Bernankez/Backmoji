@@ -4,10 +4,9 @@ import Stats from "stats.js";
 export type Fn = () => void;
 
 export function animate(options?: {
-  showStat?: boolean;
   speed?: number;
 }) {
-  let { showStat: _showStat = false, speed: _speed = 0.5 } = options || {};
+  let { speed: _speed = 0.5 } = options || {};
 
   let _callback: Fn | undefined;
   let _isPlay = false;
@@ -16,24 +15,9 @@ export function animate(options?: {
 
   const _stats = new Stats();
   _stats.showPanel(0);
-  setStat(_showStat);
 
   function getTimestamp() {
     return _timestamp;
-  }
-
-  function setStat(show: boolean) {
-    if (show === _showStat) {
-      return;
-    }
-    if (show) {
-      _stats.dom.style.left = "unset";
-      _stats.dom.style.right = "0";
-      document.body.appendChild(_stats.dom);
-    } else {
-      document.body.removeChild(_stats.dom);
-    }
-    _showStat = show;
   }
 
   function setSpeed(speed: number) {
@@ -82,9 +66,10 @@ export function animate(options?: {
   }
 
   return {
+    stat: _stats,
+
     getTimestamp,
 
-    setStat,
     setSpeed,
     setCallback,
 

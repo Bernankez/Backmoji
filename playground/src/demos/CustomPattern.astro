@@ -1,0 +1,55 @@
+<div id="demo-custom-pattern" class="h-full w-full overflow-hidden rounded-md bg-orange-50"></div>
+
+<script>
+import { backmoji, createImageRenderer } from "backmoji";
+import JSLogo from "/javascript.png?url";
+
+const canvas = document.createElement("canvas");
+const parent = document.querySelector<HTMLDivElement>("#demo-custom-pattern")!;
+
+function loadImage(url: string) {
+  const image = new Image();
+  image.src = url;
+  return new Promise<HTMLImageElement>((resolve) => {
+    image.onload = () => resolve(image);
+  });
+}
+
+async function createRenderer() {
+  return createImageRenderer(await loadImage(JSLogo), {
+    customRender({ ctx, item, renderItemWidth, renderItemHeight, rowGap, columnGap, columnCount, rowCount }) {
+      for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+        let from: number, to: number;
+        if (rowIndex % 2 === 0) {
+          from = -2;
+          to = columnCount;
+        } else {
+          from = 0;
+          to = columnCount + 2;
+        }
+        for (let columnIndex = from; columnIndex < to; columnIndex++) {
+          const x = columnIndex * (renderItemWidth + columnGap);
+          const y = rowIndex * (renderItemHeight + rowGap);
+          if ((columnIndex - rowIndex) % 2 === 0) {
+            ctx.drawImage(item, x, y, renderItemWidth, renderItemHeight);
+          }
+        }
+      }
+    },
+  });
+}
+
+const height = 300;
+const { render, setSize } = backmoji(canvas, createRenderer());
+
+const observer = new ResizeObserver((entries) => {
+  for (const entry of entries) {
+    setSize(entry.contentRect.width, height);
+    render();
+  }
+});
+observer.observe(parent);
+
+parent.appendChild(canvas);
+render();
+</script>

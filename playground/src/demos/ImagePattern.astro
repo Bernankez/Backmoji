@@ -1,55 +1,26 @@
 <div id="demo-image-pattern" class="h-full w-full overflow-hidden rounded-md bg-orange-50"></div>
 
 <script>
-import { type Renderer, backmoji, createImageRenderer } from "backmoji";
-import Avatar from "/avatar.png?url";
+import { backmoji, createImageRenderer } from "backmoji";
+import JSLogo from "/javascript.png?url";
 
 const canvas = document.createElement("canvas");
 const parent = document.querySelector<HTMLDivElement>("#demo-image-pattern")!;
 
-function loadImage() {
+function loadImage(url: string) {
+  const image = new Image();
+  image.src = url;
   return new Promise<HTMLImageElement>((resolve) => {
-    const image = document.createElement("img");
-    image.onload = () => {
-      resolve(image);
-    };
-    image.src = Avatar;
-    image.width = 200;
-    image.height = 200;
+    image.onload = () => resolve(image);
   });
 }
 
-function createRenderer() {
-  return new Promise<Renderer>(async (resolve) => {
-    const img = await loadImage();
-    const renderer = createImageRenderer(img, {
-      customRender({ ctx, item, renderItemWidth, renderItemHeight, rowGap, columnGap, columnCount, rowCount }) {
-        for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-          let from: number, to: number;
-          if (rowIndex % 2 === 0) {
-            from = -2;
-            to = columnCount;
-          } else {
-            from = 0;
-            to = columnCount + 2;
-          }
-          for (let columnIndex = from; columnIndex < to; columnIndex++) {
-            const x = columnIndex * (renderItemWidth + columnGap);
-            const y = rowIndex * (renderItemHeight + rowGap);
-            if ((columnIndex - rowIndex) % 2 === 0) {
-              ctx.drawImage(item, x, y, renderItemWidth, renderItemHeight);
-            }
-          }
-        }
-      },
-    });
-    resolve(renderer);
-  });
+async function createRenderer() {
+  return createImageRenderer(await loadImage(JSLogo));
 }
 
 const height = 300;
-const renderer = createRenderer();
-const { render, setSize } = backmoji(canvas, renderer, {
+const { render, setSize } = backmoji(canvas, createRenderer(), {
   degree: -30,
   rowGap: 50,
   columnGap: 60,
