@@ -7,7 +7,10 @@ export function degreeToAngle(degree: number) {
 export function getRightAngleSides(hypotenuseLength: number, degree: number) {
   const side1 = hypotenuseLength * Math.cos(degreeToAngle(degree)); // 对边
   const side2 = hypotenuseLength * Math.sin(degreeToAngle(degree)); // 邻边
-  return [side1, side2];
+  return makeDestructurable({
+    side1,
+    side2,
+  }, [side1, side2]);
 }
 
 export function measureRectangle(width: number, height: number, degree: number) {

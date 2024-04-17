@@ -1,5 +1,3 @@
-// TODO fix https://github.com/Bernankez/utils/issues/11
-import type { Awaitable } from "@bernankez/utils";
 import { assert } from "./utils";
 import { calculateRenderCount, calculateTranslate, measureText } from "./utils/shared";
 import { degreeToAngle } from "./utils/math";
@@ -7,6 +5,8 @@ import { degreeToAngle } from "./utils/math";
 export * from "./renderer";
 export * from "./utils/shared";
 export * from "./utils/math";
+
+export type Awaitable<T> = Promise<T> | T;
 
 export interface BackmojiOptions {
   degree?: number;
