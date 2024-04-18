@@ -4,15 +4,15 @@ layout: ./_Index.astro
 
 > **This library is still under development, and the APIs are not stable yet.**
 
-## Install
+## With vanilla JavaScript
+
+### Install
 
 ```sh
 npm install backmoji
 ```
 
-## Usage
-
-### With vanilla JavaScript
+### Usage
 
 import WithVanilla from "@/demos/WithVanilla.astro";
 
@@ -45,7 +45,15 @@ const { render } = backmoji(canvas, createRenderer(), {
 render();
 ```
 
-### With Vue
+## With Vue
+
+### Install
+
+```sh
+npm install @backmoji/vue
+```
+
+### Usage
 
 import WithVue from "@/demos/WithVue.vue";
 
@@ -75,7 +83,15 @@ watchEffect(() => {
 </template>
 ```
 
-### With React
+## With React
+
+### Install
+
+```sh
+npm install @backmoji/react
+```
+
+### Usage
 
 import { WithReact } from "@/demos/WithReact";
 
