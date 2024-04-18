@@ -1,7 +1,7 @@
 {
   "name": "@backmoji/react",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "packageManager": "pnpm@8.15.5",
   "description": "React port for backmoji",
   "author": {

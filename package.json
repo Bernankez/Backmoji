@@ -1,7 +1,7 @@
 {
   "name": "@backmoji/monorepo",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "packageManager": "pnpm@8.15.7",
   "description": "A library for creating patterns quickly and easily",
