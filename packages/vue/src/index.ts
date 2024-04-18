@@ -1,5 +1,5 @@
 import { type BackmojiOptions, type CreateImageRendererOptions, type CreateTextRendererOptions, type Renderer, backmoji, createImageRenderer, createTextRenderer } from "backmoji";
-import { type MaybeRefOrGetter, computed, onMounted, ref, toValue } from "vue";
+import { type MaybeRefOrGetter, computed, onMounted, ref, toValue } from "vue-demi";
 
 export type BackmojiResult = ReturnType<typeof backmoji>;
 
