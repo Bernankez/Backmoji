@@ -16,6 +16,7 @@ export interface BackmojiOptions {
 
 export interface RendererContext {
   ctx: CanvasRenderingContext2D;
+  ratio: number;
   width: number;
   height: number;
   rowGap: number;
@@ -32,6 +33,7 @@ export type Renderer = (context: RendererContext) => void;
 
 export function backmoji(canvas: Awaitable<HTMLCanvasElement>, renderer: Awaitable<Renderer>, options?: BackmojiOptions) {
   let _options: BackmojiOptions = options || {};
+  let _hasSize = false;
 
   async function createRendererContext() {
     const _canvas = await canvas;
@@ -58,6 +60,7 @@ export function backmoji(canvas: Awaitable<HTMLCanvasElement>, renderer: Awaitab
 
     return {
       ctx,
+      ratio: window.devicePixelRatio,
       width,
       height,
       rowGap,
@@ -72,6 +75,9 @@ export function backmoji(canvas: Awaitable<HTMLCanvasElement>, renderer: Awaitab
   }
 
   async function render() {
+    if (!_hasSize) {
+      setSize(undefined, undefined);
+    }
     const _renderer = await renderer;
     const context = await createRendererContext();
     _renderer(context);
@@ -86,6 +92,7 @@ export function backmoji(canvas: Awaitable<HTMLCanvasElement>, renderer: Awaitab
   }
 
   async function setSize(width: number | undefined, height: number | undefined) {
+    _hasSize = true;
     const _canvas = await canvas;
     const ratio = window.devicePixelRatio;
     const w = width || _canvas.width;

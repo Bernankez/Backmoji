@@ -37,7 +37,7 @@ export function createTextRenderer(text: string, options?: CreateTextRendererOpt
   const { font, customRender } = options || {};
   const render = customRender ?? textRender;
   const renderer: Renderer = (context) => {
-    const { ctx, rowGap, columnGap, measureText, degree, angle, calculateRenderCount, calculateTranslate, width, height } = context;
+    const { ctx, ratio, rowGap, columnGap, measureText, degree, angle, calculateRenderCount, calculateTranslate, width, height } = context;
     if (font) {
       ctx.font = font;
     }
@@ -45,6 +45,7 @@ export function createTextRenderer(text: string, options?: CreateTextRendererOpt
     ctx.textBaseline = "top";
     const { x, y } = calculateTranslate();
     ctx.save();
+    ctx.scale(ratio, ratio);
     ctx.translate(x, y);
     ctx.rotate(angle);
     const { width: renderItemWidth, height: renderItemHeight } = measureText(text);
@@ -90,9 +91,10 @@ export function createImageRenderer(img: HTMLImageElement, options?: CreateImage
   const { customRender } = options || {};
   const render = customRender ?? imageRender;
   const renderer: Renderer = (context) => {
-    const { ctx, angle, width, height, rowGap, columnGap, degree, calculateTranslate, calculateRenderCount } = context;
+    const { ctx, ratio, angle, width, height, rowGap, columnGap, degree, calculateTranslate, calculateRenderCount } = context;
     const { x, y } = calculateTranslate();
     ctx.save();
+    ctx.scale(ratio, ratio);
     ctx.translate(x, y);
     ctx.rotate(angle);
     const renderItemWidth = img.width;
