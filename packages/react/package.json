@@ -2,7 +2,7 @@
   "name": "@backmoji/react",
   "type": "module",
   "version": "0.1.0",
-  "packageManager": "pnpm@8.15.5",
+  "packageManager": "pnpm@9.0.2",
   "description": "React port for backmoji",
   "author": {
     "name": "Cole",
@@ -57,8 +57,8 @@
     "backmoji": "workspace:*"
   },
   "devDependencies": {
-    "@types/react": "^18.2.66",
-    "@types/react-dom": "^18.2.22",
+    "@types/react": "^18.2.79",
+    "@types/react-dom": "^18.2.25",
     "react": "16.8.0",
     "react-dom": "16.8.0"
   }

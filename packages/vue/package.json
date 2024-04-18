@@ -2,7 +2,7 @@
   "name": "@backmoji/vue",
   "type": "module",
   "version": "0.1.0",
-  "packageManager": "pnpm@8.15.5",
+  "packageManager": "pnpm@9.0.2",
   "description": "Vue port for backmoji",
   "author": {
     "name": "Cole",
@@ -50,12 +50,19 @@
     "access": "public"
   },
   "peerDependencies": {
-    "vue": ">=3.4.0"
+    "@vue/composition-api": "^1.0.0-rc.1",
+    "vue": "^2.0.0 || >=3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@vue/composition-api": {
+      "optional": true
+    }
   },
   "dependencies": {
-    "backmoji": "workspace:*"
+    "backmoji": "workspace:*",
+    "vue-demi": "^0.14.7"
   },
   "devDependencies": {
-    "vue": "3.4.0"
+    "vue": "^3.4.23"
   }
 }
