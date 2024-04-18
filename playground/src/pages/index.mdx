@@ -2,6 +2,8 @@
 layout: ./_Index.astro
 ---
 
+> **This library is still under development, and the APIs are not stable yet.**
+
 ## Install
 
 ```sh
@@ -267,7 +269,7 @@ render();
 
 ### With animation
 
-`backmoji` itself does not provide any animation-related functionality, but through `customRender`, you can implement your own animatino functionality, just like the animated background on this website. Here is a demonstration related to animation functionality.
+`backmoji` itself does not provide any animation-related functionality, but through `customRender`, you can implement your own animation functionality, just like the animated background on this website. Here is a demonstration related to animation functionality.
 
 import AnimationPattern from "@/demos/AnimationPattern.astro";
 
@@ -438,7 +440,90 @@ parent.appendChild(statDom);
 play();
 ```
 
-### Options
+## Customize
 
-// TODO
-// explaination for options
+You can create your own `renderer` if the provided renderers do not meet your needs. See [renderer.ts](https://github.com/Bernankez/Backmoji/blob/master/packages/core/src/renderer.ts) for more details.
+
+## Options
+
+### `backmoji`
+
+```ts
+declare function backmoji(canvas: Awaitable<HTMLCanvasElement>, renderer: Awaitable<Renderer>, options?: BackmojiOptions): {
+  render: () => Promise<void>;
+  setOptions: (options: BackmojiOptions, combine?: boolean) => void;
+  /*
+  * Set the size of the canvas. It handles device pixel ratio automatically.
+  */
+  setSize: (width: number | undefined, height: number | undefined) => Promise<void>;
+};
+
+interface BackmojiOptions {
+  degree?: number;
+  rowGap?: number;
+  columnGap?: number;
+}
+
+type Renderer = (context: RendererContext) => void;
+
+interface RendererContext {
+  ctx: CanvasRenderingContext2D;
+  width: number;
+  height: number;
+  rowGap: number;
+  columnGap: number;
+  degree: number;
+  angle: number;
+  /*
+  * Measure size of texts, using CanvasRenderingContext2D.measureText underhood
+  */
+  measureText: (text: string) => {
+    width: number;
+    fontHeight: number;
+    height: number;
+  };
+  /*
+  * Calculate how many items should be rendered each row
+  */
+  calculateRenderCount: (renderItemWidth: number, renderItemHeight: number) => number[] & {
+    row: number;
+    column: number;
+  };
+  /*
+  * Calculate the translate after rotation
+  */
+  calculateTranslate: () => number[] & {
+    x: number;
+    y: number;
+  };
+}
+```
+
+### renderer
+
+```ts
+interface CreateTextRendererOptions {
+  font?: string;
+  customRender?: (context: RenderContext<string>) => void;
+}
+/*
+* The default render function if no customRender provided
+*/
+declare function textRender(context: RenderContext<string>): void;
+declare function createTextRenderer(text: string, options?: CreateTextRendererOptions): Renderer;
+interface CreateImageRendererOptions {
+  customRender?: (context: RenderContext<HTMLImageElement>) => void;
+}
+```
+
+```ts
+/*
+* The default render function if no customRender provided
+*/
+declare function imageRender(context: RenderContext<HTMLImageElement>): void;
+declare function createImageRenderer(img: HTMLImageElement, options?: CreateImageRendererOptions): Renderer;
+```
+
+The following image explains the meanings of various attribute values:
+
+![options](./explainations.png)
