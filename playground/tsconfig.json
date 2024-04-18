@@ -6,7 +6,10 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["./*"],
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "backmoji": ["../packages/core/src/index.ts"],
+      "@backmoji/react": ["../packages/react/src/index.ts"],
+      "@backmoji/vue": ["../packages/vue/src/index.ts"]
     },
     "noUnusedLocals": false,
     "noUnusedParameters": false
