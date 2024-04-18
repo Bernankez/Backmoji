@@ -493,4 +493,4 @@ declare function createImageRenderer(img: HTMLImageElement, options?: CreateImag
 
 The following image explains the meanings of various attribute values:
 
-![options](./playground/src/pages/explainations.png)
+![options](https://github.com/Bernankez/Backmoji/assets/23058788/cba65b1c-7885-403c-b33d-730b1310e458)
