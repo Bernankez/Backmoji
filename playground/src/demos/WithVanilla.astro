@@ -1,29 +1,29 @@
 <div id="demo-usage"></div>
 
 <script>
-import { backmoji, createImageRenderer } from "backmoji";
-import JSLogo from "/javascript.png?url";
+  import { backmoji, createImageRenderer } from "backmoji";
+  import JSLogo from "/javascript.png?url";
 
-const div = document.querySelector<HTMLDivElement>("#demo-usage")!;
-const canvas = document.createElement("canvas");
-div.appendChild(canvas);
+  const div = document.querySelector<HTMLDivElement>("#demo-usage")!;
+  const canvas = document.createElement("canvas");
+  div.appendChild(canvas);
 
-async function loadImage(url: string) {
-  const image = new Image();
-  image.src = url;
-  return new Promise<HTMLImageElement>(resolve => {
-    image.onload = () => resolve(image);
-  })
-}
+  async function loadImage(url: string) {
+    const image = new Image();
+    image.src = url;
+    return new Promise<HTMLImageElement>((resolve) => {
+      image.onload = () => resolve(image);
+    });
+  }
 
-async function createRenderer() {
-  return createImageRenderer(await loadImage(JSLogo));
-}
+  async function createRenderer() {
+    return createImageRenderer(await loadImage(JSLogo));
+  }
 
-const { render } = backmoji(canvas, createRenderer(), {
-  rowGap: 15,
-  columnGap: 20,
-  degree: 30,
-});
-render();
+  const { render } = backmoji(canvas, createRenderer(), {
+    rowGap: 15,
+    columnGap: 20,
+    degree: 30,
+  });
+  render();
 </script>

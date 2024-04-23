@@ -14,13 +14,12 @@ const title = getTitle(type);
 // @unocss-include
 function getIcon(type: Props["type"]) {
   switch (type) {
-      case "npm":
-        return "i-tabler:brand-npm text-2xl";
-      default:
-        return "i-tabler:brand-github text-xl";
-    }
+    case "npm":
+      return "i-tabler:brand-npm text-2xl";
+    default:
+      return "i-tabler:brand-github text-xl";
+  }
 }
-
 
 function getLink(type: Props["type"]) {
   switch (type) {
@@ -44,11 +43,22 @@ function getTitle(type: Props["type"]) {
   }
 }
 ---
-<div class="group w-fit select-none b-1 b-orange-800 rounded-md b-solid bg-orange-50 text-sm transition hover:b-orange-500 hover:bg-orange-500">
+
+<div
+  class="group w-fit select-none b-1 b-orange-800 rounded-md b-solid bg-orange-50 text-sm transition hover:b-orange-500 hover:bg-orange-500"
+>
   <a class="h-full flex" href={link}>
-    <div class="h-full flex items-center b-r-1 b-r-orange-800 b-r-solid px-1 group-hover:b-r-orange-500">
-      <div class:list={["text-orange-800 group-hover:text-white transition", icon]}></div>
+    <div
+      class="h-full flex items-center b-r-1 b-r-orange-800 b-r-solid px-1 group-hover:b-r-orange-500"
+    >
+      <div
+        class:list={["text-orange-800 group-hover:text-white transition", icon]}
+      >
+      </div>
     </div>
-    <span class="h-full flex items-center px-1 text-orange-800 transition group-hover:text-white">{title}</span>
+    <span
+      class="h-full flex items-center px-1 text-orange-800 transition group-hover:text-white"
+      >{title}</span
+    >
   </a>
 </div>

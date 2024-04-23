@@ -3,7 +3,12 @@ import bernankez from "@bernankez/eslint-config";
 export default bernankez({
   unocss: true,
   astro: true,
-  formatters: true,
+  formatters: {
+    astro: true,
+    html: true,
+    css: true,
+    markdown: true,
+  },
   vue: true,
   javascript: {
     overrides: {

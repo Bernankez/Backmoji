@@ -1,39 +1,43 @@
-<div id="demo-image-pattern" class="h-full w-full overflow-hidden rounded-md bg-orange-50"></div>
+<div
+  id="demo-image-pattern"
+  class="h-full w-full overflow-hidden rounded-md bg-orange-50"
+>
+</div>
 
 <script>
-import { backmoji, createImageRenderer } from "backmoji";
-import JSLogo from "/javascript.png?url";
+  import { backmoji, createImageRenderer } from "backmoji";
+  import JSLogo from "/javascript.png?url";
 
-const canvas = document.createElement("canvas");
-const parent = document.querySelector<HTMLDivElement>("#demo-image-pattern")!;
+  const canvas = document.createElement("canvas");
+  const parent = document.querySelector<HTMLDivElement>("#demo-image-pattern")!;
 
-function loadImage(url: string) {
-  const image = new Image();
-  image.src = url;
-  return new Promise<HTMLImageElement>((resolve) => {
-    image.onload = () => resolve(image);
-  });
-}
-
-async function createRenderer() {
-  return createImageRenderer(await loadImage(JSLogo));
-}
-
-const height = 300;
-const { render, setSize } = backmoji(canvas, createRenderer(), {
-  degree: -30,
-  rowGap: 50,
-  columnGap: 60,
-});
-
-const observer = new ResizeObserver((entries) => {
-  for (const entry of entries) {
-    setSize(entry.contentRect.width, height);
-    render();
+  function loadImage(url: string) {
+    const image = new Image();
+    image.src = url;
+    return new Promise<HTMLImageElement>((resolve) => {
+      image.onload = () => resolve(image);
+    });
   }
-});
-observer.observe(parent);
 
-parent.appendChild(canvas);
-render();
+  async function createRenderer() {
+    return createImageRenderer(await loadImage(JSLogo));
+  }
+
+  const height = 300;
+  const { render, setSize } = backmoji(canvas, createRenderer(), {
+    degree: -30,
+    rowGap: 50,
+    columnGap: 60,
+  });
+
+  const observer = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      setSize(entry.contentRect.width, height);
+      render();
+    }
+  });
+  observer.observe(parent);
+
+  parent.appendChild(canvas);
+  render();
 </script>
